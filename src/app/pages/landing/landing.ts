@@ -1,0 +1,36 @@
+﻿import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { Header } from '../../layout/header/header';
+import { Footer } from '../../layout/footer/footer';
+import { HeroSection } from "../../features/sections/hero-section/hero-section";
+import { WhyChooseUsSection } from "../../features/sections/why-choose-us-section/why-choose-us-section";
+import { MissionSection } from "../../features/sections/mission-section/mission-section";
+import { TrustedPartner } from '../../shared/models';
+
+@Component({
+  selector: 'app-landing',
+  standalone: true,
+  imports: [
+    Header,
+    Footer,
+    HeroSection,
+    WhyChooseUsSection,
+    MissionSection
+  ],
+  templateUrl: './landing.html',
+  styleUrl: './landing.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class LandingComponent {
+  readonly partners = signal<TrustedPartner[]>([
+    { name: 'Netskope', logo: 'assets/partners/netskope.png' },
+    { name: 'Cisco', logo: 'assets/partners/cisco.png' },
+    { name: 'Cyberhaven', logo: 'assets/partners/cyberhaven%20copy.svg' },
+    { name: 'Cato', logo: 'assets/partners/cato3.svg' }
+  ]);
+
+  readonly marqueePartners = computed(() => [
+    ...this.partners(),
+    ...this.partners(),
+    ...this.partners()
+  ]);
+}

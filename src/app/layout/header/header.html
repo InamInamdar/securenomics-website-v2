@@ -1,0 +1,28 @@
+﻿<nav
+  class="fixed top-0 z-50 w-full border-b border-white/10 bg-cyber-dark/80 backdrop-blur-xl px-6 lg:px-12 transition-all duration-300 animate__animated animate__fadeInDown">
+  <div class="max-container flex items-center justify-between py-5">
+    <img src="/logo.png" alt="Securenomics" class="h-16 cursor-pointer object-contain brightness-0 invert"
+      routerLink="/" />
+    <div class="flex items-center gap-12">
+      <div class="hidden items-center gap-8 text-sm font-bold text-slate-300 md:flex uppercase tracking-widest">
+        <app-navbar-dropdown label="Platforms" [items]="platformItems()">
+        </app-navbar-dropdown>
+
+        <app-navbar-dropdown label="Solutions" [items]="solutionItems()">
+        </app-navbar-dropdown>
+
+        <a class="transition-all hover:text-white hover:translate-y-[-1px] py-2" routerLink="/learn">Learn</a>
+        <a class="transition-all hover:text-white hover:translate-y-[-1px] py-2" routerLink="/about">About</a>
+        <a class="transition-all hover:text-white hover:translate-y-[-1px] py-2" routerLink="/services">Services</a>
+
+        <!-- <div class="flex items-center gap-6">
+          <a class="rounded-full bg-brand-blue px-8 py-3 text-sm font-bold text-white transition-all hover:bg-brand-blue-light hover:shadow-lg hover:shadow-brand-blue/30 transform hover:scale-105 active:scale-95 uppercase tracking-wider"
+            routerLink="/" fragment="contact">
+            Contact Us
+          </a>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</nav>

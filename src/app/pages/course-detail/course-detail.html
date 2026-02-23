@@ -1,0 +1,315 @@
+<div class="min-h-screen bg-slate-50">
+    <app-header />
+
+    <main>
+
+        <!-- ─── SKELETON LOADER ──────────────────────────────────────── -->
+        @if (loading()) {
+        <section class="relative min-h-[520px] bg-cyber-dark overflow-hidden pt-32 pb-24 px-6 flex items-end">
+            <div class="max-w-7xl mx-auto w-full space-y-5 animate-pulse">
+                <div class="h-4 w-32 bg-white/10 rounded-full"></div>
+                <div class="h-12 w-2/3 bg-white/10 rounded-xl"></div>
+                <div class="h-6 w-1/2 bg-white/10 rounded-xl"></div>
+                <div class="flex gap-3 mt-6">
+                    <div class="h-8 w-28 bg-white/10 rounded-full"></div>
+                    <div class="h-8 w-28 bg-white/10 rounded-full"></div>
+                    <div class="h-8 w-28 bg-white/10 rounded-full"></div>
+                </div>
+            </div>
+        </section>
+        <div class="max-w-7xl mx-auto px-6 py-20 space-y-6 animate-pulse">
+            <div class="h-8 w-48 bg-slate-200 rounded-lg"></div>
+            <div class="h-4 bg-slate-200 rounded w-full"></div>
+            <div class="h-4 bg-slate-200 rounded w-11/12"></div>
+            <div class="h-4 bg-slate-200 rounded w-4/5"></div>
+        </div>
+        }
+
+        <!-- ─── ERROR STATE ──────────────────────────────────────────── -->
+        @if (error()) {
+        <div class="min-h-screen flex items-center justify-center px-6">
+            <div class="text-center max-w-md">
+                <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 mb-3">Something went wrong</h2>
+                <p class="text-slate-500 mb-8">{{ error() }}</p>
+                <a routerLink="/learn"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Courses
+                </a>
+            </div>
+        </div>
+        }
+
+        <!-- ─── MAIN CONTENT ─────────────────────────────────────────── -->
+        @if (!loading() && !error() && schedule()) {
+
+        <!-- ── 1. HERO ── -->
+        <section class="cd-hero relative overflow-hidden pt-32 lg:pt-40 pb-24">
+
+            <!-- Background blobs -->
+            <div class="absolute inset-0 z-0 pointer-events-none">
+                <div class="blob blob-blue top-[-15%] left-[-10%]"></div>
+                <div class="blob blob-indigo bottom-[-15%] right-[-10%]" style="animation-delay:2.5s"></div>
+                <div class="blob blob-center"></div>
+                <!-- Subtle grid overlay -->
+                <div class="absolute inset-0 cd-grid-overlay opacity-[0.03]"></div>
+            </div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-6">
+
+                <!-- Back link -->
+                <a routerLink="/learn"
+                    class="inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm font-semibold uppercase tracking-widest transition-colors duration-200 mb-10 group">
+                    <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Courses
+                </a>
+
+                <!-- Hero body -->
+                <div class="cd-hero-grid">
+
+                    <!-- Left: title + meta -->
+                    <div class="cd-hero-left animate__animated animate__fadeInUp">
+
+                        <!-- Vendor tag -->
+                        @if (schedule()?.course?.category?.organization?.name) {
+                        <div
+                            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-6">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            </span>
+                            {{ schedule()?.course?.category?.organization?.name }}
+                        </div>
+                        }
+
+                        <!-- Title -->
+                        <h1
+                            class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight mb-6">
+                            {{ schedule()?.course?.title }}
+                        </h1>
+
+                        <!-- Meta pills row -->
+                        <div class="flex flex-wrap items-center gap-3">
+
+                            <!-- Region -->
+                            @if (schedule()?.region) {
+                            <div class="cd-meta-pill">
+                                <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                                </svg>
+                                <span>{{ mapRegion(schedule()?.region) }}</span>
+                            </div>
+                            }
+
+                            <!-- Status badge -->
+                            @if (schedule()?.status) {
+                            <span class="cd-status-badge" [ngClass]="getStatusClass(schedule()?.status)">
+                                {{ schedule()?.status }}
+                            </span>
+                            }
+
+                        </div>
+                    </div>
+
+                    <!-- Right: info card -->
+                    <div class="cd-hero-right animate__animated animate__fadeInUp" style="animation-delay:150ms">
+                        <div class="cd-info-card">
+                            <!-- Start Date / Time -->
+                            @if (schedule()?.startDate) {
+                            <div class="cd-info-row">
+                                <svg class="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <div>
+                                    <p class="cd-info-label">Course Start Date & Time</p>
+                                    <p class="cd-info-value">{{ formatDate(schedule()?.startDate, schedule()?.timezone)
+                                        }}</p>
+                                </div>
+                            </div>
+                            }
+                            <!-- Vendor -->
+                            @if (schedule()?.course?.category?.organization?.name) {
+                            <div class="cd-info-row">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                                <div>
+                                    <p class="cd-info-label">Vendor</p>
+                                    <p class="cd-info-value">{{ schedule()?.course?.category?.organization?.name }}</p>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ── 2. COURSE DETAILS ── -->
+        <section class="cd-details-section">
+            <div class="max-w-7xl mx-auto px-6 py-20">
+                <div class="cd-details-grid">
+
+                    <!-- Description -->
+                    <div class="cd-details-main cd-reveal bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+                        <div class="cd-section-eyebrow">
+                            <span class="cd-eyebrow-line"></span>
+                            Course Details
+                        </div>
+                        <div class="cd-description prose" [innerHTML]="safeDescription"></div>
+                    </div>
+
+                    <!-- Sidebar: quick facts -->
+                    <aside class="cd-details-aside cd-reveal" style="animation-delay:100ms">
+                        <div class="cd-sidebar-card">
+                            <h3 class="cd-sidebar-title">Registration</h3>
+
+                            @if (schedule()?.startDate) {
+                            <div class="cd-sidebar-row">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <div>
+                                    <p class="cd-sidebar-label">Start Date</p>
+                                    <p class="cd-sidebar-value">{{ formatDate(schedule()?.startDate,
+                                        schedule()?.timezone) }}</p>
+                                </div>
+                            </div>
+                            }
+
+                            @if (schedule()?.region) {
+                            <div class="cd-sidebar-row">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                                </svg>
+                                <div>
+                                    <p class="cd-sidebar-label">Region</p>
+                                    <p class="cd-sidebar-value">{{ mapRegion(schedule()?.region) }}</p>
+                                </div>
+                            </div>
+                            }
+
+                            @if (schedule()?.status) {
+                            <div class="cd-sidebar-row">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div>
+                                    <p class="cd-sidebar-label">Status</p>
+                                    <p class="cd-sidebar-value">{{ schedule()?.status }}</p>
+                                </div>
+                            </div>
+                            }
+
+                            @if (schedule()?.course?.category?.trainingType) {
+                            <div class="cd-sidebar-row">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                <div>
+                                    <p class="cd-sidebar-label">Type</p>
+                                    <p class="cd-sidebar-value">{{ schedule()?.course?.category?.trainingType }}</p>
+                                </div>
+                            </div>
+                            }
+
+                            <!-- CTA inside sidebar -->
+                            <div class="mt-8">
+                                @if (schedule()?.registrationLink) {
+                                <a [href]="schedule()?.registrationLink" target="_blank" rel="noopener noreferrer"
+                                    class="cd-cta-btn cd-cta-primary w-full text-center">
+                                    Register Now
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                                } @else {
+                                <a href="mailto:training@securenomics.com?subject=Registration Request&body=I am interested in registering for: {{ schedule()?.course?.title }}"
+                                    class="cd-cta-btn cd-cta-secondary w-full text-center">
+                                    Request Registration
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </a>
+                                }
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ── 3. BOTTOM CTA BANNER ── -->
+        <section class="cd-cta-banner">
+            <div class="max-w-3xl mx-auto px-6 text-center cd-reveal">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+                    Ready to elevate your skills?
+                </h2>
+                <p class="text-slate-400 mb-8 text-lg">
+                    Join other security professionals advancing their expertise with Securenomics.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    @if (schedule()?.registrationLink) {
+                    <a [href]="schedule()?.registrationLink" target="_blank" rel="noopener noreferrer"
+                        class="cd-cta-btn cd-cta-primary">
+                        Register Now
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                    } @else {
+                    <a href="mailto:training@securenomics.com?subject=Registration Request&body=I am interested in registering for: {{ schedule()?.course?.title }}"
+                        class="cd-cta-btn cd-cta-primary">
+                        Request Registration
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </a>
+                    }
+                    <a routerLink="/learn" class="cd-cta-btn cd-cta-ghost">
+                        Browse All Courses
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        }<!-- end main content -->
+
+    </main>
+
+    <app-footer />
+</div>

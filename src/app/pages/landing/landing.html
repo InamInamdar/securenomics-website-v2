@@ -1,0 +1,36 @@
+﻿<section class="bg-white text-gray-900">
+  <app-header></app-header>
+
+  <main>
+    <app-hero-section />
+
+    <!-- Partners Marquee -->
+    <section class="py-12 bg-white border-y border-slate-100 relative overflow-hidden">
+      <div class="max-container flex flex-col md:flex-row items-center gap-12">
+        <div class="flex-shrink-0 px-6 text-center md:text-left border-r-0 md:border-r border-slate-200 pr-12">
+          <h2 class="text-slate-500 text-sm md:text-base font-medium leading-relaxed max-w-[200px]">
+            We've worked with 500+ businesses worldwide
+          </h2>
+        </div>
+
+        <div class="relative flex-grow overflow-hidden mask-fade-edges">
+          <div class="marquee-track flex items-center gap-12 py-4">
+            @for (partner of marqueePartners(); track $index) {
+            <div class="flex items-center gap-12 group/item">
+              <img [src]="partner.logo" [alt]="partner.name"
+                class="h-8 md:h-12 w-auto object-contain marquee-logo transition-all duration-300 pointer-events-auto"
+                loading="lazy" />
+              <div class="h-8 w-px bg-slate-200"></div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <app-mission-section />
+    <app-why-choose-us-section />
+  </main>
+
+  <app-footer></app-footer>
+</section>

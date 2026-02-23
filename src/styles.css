@@ -1,0 +1,40 @@
+﻿@import "animate.css";
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+@theme {
+  --color-brand-blue: #1e40af;
+  --color-brand-blue-light: #3b82f6;
+  --color-brand-blue-dark: #1e3a8a;
+  --color-brand-navy: #0f172a;
+  --color-cyber-dark: #020617;
+  --color-cyber-gray: #1e293b;
+
+  --bg-gradient-cyber: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  --bg-gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply antialiased text-slate-900 bg-white;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.glass-card {
+  @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-xl;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600;
+}
+
+.section-padding {
+  @apply py-24 px-6 lg:px-12;
+}
+
+.max-container {
+  @apply mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px];
+}

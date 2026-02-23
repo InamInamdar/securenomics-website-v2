@@ -1,0 +1,19 @@
+/* Hero styles */
+:host {
+    display: block;
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    position: relative;
+    background: #0B1121;
+    /* Match cyber-dark fallback */
+}
+
+video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

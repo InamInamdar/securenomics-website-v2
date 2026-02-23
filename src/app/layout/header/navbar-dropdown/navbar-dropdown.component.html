@@ -1,0 +1,65 @@
+<div class="relative inline-block text-left">
+    <!-- Trigger -->
+    <button type="button"
+        class="flex items-center gap-2 py-2 text-sm font-bold text-slate-300 transition-all hover:text-white uppercase tracking-widest focus:outline-none"
+        (click)="toggleDropdown()" [attr.aria-expanded]="isOpen()" aria-haspopup="true">
+        {{ label }}
+        <svg class="h-4 w-4 transition-transform duration-300"
+            [style.transform]="isOpen() ? 'rotate(180deg)' : 'rotate(0)'" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <!-- Dropdown Menu -->
+    @if (isOpen()) {
+    <div
+        class="absolute left-0 top-full pt-4 w-72 origin-top-left z-50 animate__animated animate__fadeIn animate__faster">
+        <div
+            class="rounded-3xl bg-cyber-dark/95 backdrop-blur-2xl border border-white/10 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div class="space-y-1">
+                @for (item of items; track item.title) {
+                <a [href]="item.link"
+                    class="group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/5 active:bg-white/10"
+                    (click)="isOpen.set(false)">
+
+                    <!-- Icon Placeholder/Circle -->
+                    <!-- <div
+                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue/20 text-brand-blue-light transition-all duration-300 group-hover:bg-brand-blue group-hover:text-white">
+                        @if (item.icon === 'netskope') {
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 18l-8-4v-8l8-4 8 4v8l-8 4z" />
+                        </svg>
+                        } @else if (item.icon === 'cisco') {
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 15l2-2h12l2 2v2H4v-2zm0-4l2-2h12l2 2v2H4v-2zm0-4l2-2h12l2 2v2H4v-2z" />
+                        </svg>
+                        } @else if (item.icon === 'cato') {
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                        </svg>
+                        } @else if (item.icon === 'cyberhaven') {
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21l-9-5V8l9-5 9 5v8l-9 5z" />
+                        </svg>
+                        } @else {
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        }
+                    </div> -->
+
+                    <div>
+                        <div class="text-sm font-bold text-white transition-all duration-300 group-hover:translate-x-1">
+                            {{ item.title }}
+                        </div>
+                    </div>
+                </a>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</div>

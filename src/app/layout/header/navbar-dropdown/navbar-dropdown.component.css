@@ -1,0 +1,22 @@
+:host {
+    display: block;
+}
+
+.origin-top-left {
+    transform-origin: top left;
+}
+
+/* Custom shadow for premium feel */
+.shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Animation refinement for items */
+a.group:hover div:first-child {
+    transform: scale(1.02);
+}
+
+/* Ensure dropdown is visible on top of everything */
+.z-50 {
+    z-index: 50;
+}

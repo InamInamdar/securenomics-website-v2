@@ -1,0 +1,29 @@
+<section id="why" class="section-padding bg-slate-50">
+    <div class="max-container">
+        <div class="text-center mb-16" appAnimateOnScroll="animate__fadeInDown">
+            <h2 class="text-4xl font-bold tracking-tight text-slate-900">Why Choose Us</h2>
+            <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto" appAnimateOnScroll="animate__fadeInUp"
+                [animationDelay]="'200ms'">
+                Outcome-driven, partner-first execution that turns security strategy into tangible growth.
+            </p>
+        </div>
+
+        <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" appAnimateOnScroll="animate__fadeInUp"
+            [animationDelay]="'400ms'">
+            @for (benefit of benefits(); track benefit.id) {
+            <li
+                class="rounded-3xl bg-white p-8 text-slate-700 shadow-sm border border-slate-100 transition-all hover:shadow-xl group">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-10 h-10 rounded-full bg-brand-blue/5 flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-bold">{{ benefit.label }}</span>
+                </div>
+            </li>
+            }
+        </ul>
+    </div>
+</section>

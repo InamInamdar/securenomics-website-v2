@@ -1,0 +1,238 @@
+<app-header></app-header>
+
+<main class="bg-white text-slate-900 min-h-screen">
+    <!-- Hero Section (Keep Dark for Impact) -->
+    <section
+        class="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-32 lg:pt-48 pb-20 bg-black">
+        <!-- Background Video -->
+        <video #heroVideo class="absolute top-0 left-0 w-full h-full object-cover object-center z-0"
+            src="assets/service-video-v1.mp4" [autoplay]="true" [muted]="true" loop playsinline></video>
+
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/90 z-10"></div>
+
+        <!-- Hero Content -->
+        <div class="max-w-7xl w-full mx-auto px-6 relative z-20">
+            <div class="text-center max-w-5xl mx-auto" appAnimateOnScroll="animate__fadeInUp">
+                <h1 class="text-5xl md:text-6xl lg:text-8xl font-black leading-[1.1] tracking-tight mb-8 text-white">
+                    Our <span
+                        class="bg-gradient-to-r from-[#a8ff78] to-[#78ffd6] bg-clip-text text-transparent">Services</span>
+                </h1>
+                <p class="text-lg md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 leading-relaxed font-medium">
+                    Experience next-generation security solutions tailored to your infrastructure.
+                    We provide comprehensive protection and strategic management to keep your
+                    business secure and resilient.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 items-center justify-center">
+                    <a routerLink="/services" fragment="seed"
+                        class="w-full sm:w-auto px-10 py-5 rounded-2xl text-base font-bold bg-transparent text-white border-2 border-white/20 backdrop-blur-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 uppercase tracking-widest">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seed Section -->
+    <section id="seed" class="py-24 lg:py-32 bg-[#FAFBFC]">
+        <div class="max-w-7xl w-full mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="order-2 lg:order-1" appAnimateOnScroll="animate__fadeInLeft">
+                    <h2 class="text-4xl lg:text-6xl font-black mb-8 leading-tight tracking-tight text-slate-900">
+                        Seed
+                    </h2>
+                    <div class="space-y-6 text-xl text-slate-600 leading-relaxed max-w-2xl font-medium">
+                        <p>
+                            Securenomics is a premier distributor and services provider for Netskope and Cisco Security,
+                            helping mid-market organizations secure their environment via partners in North America. We
+                            take a comprehensive approach to support customers at every stage of their security journey,
+                            providing education, via Workshops and Certifications, rapid PoV and Implementation
+                            services, and ongoing management, with CoManage 360, to help partners grow their business
+                            and drive customer adoption and loyalty.
+                        </p>
+                        <p>
+                            We work closely with Netskope and Cisco Security to drive awareness of the latest security
+                            capabilities and improve the productivity of online marketplaces, and drive channel growth.
+                            With Securenomics, it's never been easier for VARs, integrators, and service providers to
+                            accelerate adoption, streamline procurement, and optimize deployments to create maximum
+                            value for their customers and their business.
+                        </p>
+                    </div>
+                    <div class="mt-10">
+                        <button
+                            class="px-8 py-4 rounded-xl font-bold bg-brand-blue text-white hover:bg-brand-blue-light transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-blue-500/20 uppercase tracking-widest">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2" appAnimateOnScroll="animate__fadeInRight">
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-4 bg-gradient-to-tr from-blue-500/20 to-emerald-500/20 rounded-[48px] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000">
+                        </div>
+                        <div
+                            class="relative bg-white p-4 rounded-[40px] shadow-2xl shadow-blue-500/5 aspect-square overflow-hidden">
+                            <img src="assets/seed_img.jpg" alt="Market Seeding"
+                                class="w-full h-full object-cover rounded-[32px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Section -->
+    <section id="service" class="py-24 lg:py-32 bg-white relative">
+        <div class="max-w-7xl w-full mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div appAnimateOnScroll="animate__fadeInLeft">
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-4 bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 rounded-[48px] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000">
+                        </div>
+                        <div
+                            class="relative bg-white p-4 rounded-[40px] shadow-2xl shadow-emerald-500/5 aspect-square overflow-hidden">
+                            <img src="assets/service_img.jpg" alt="Rapid POV"
+                                class="w-full h-full object-cover rounded-[32px]">
+                        </div>
+                    </div>
+                </div>
+                <div appAnimateOnScroll="animate__fadeInRight">
+                    <h2 class="text-4xl lg:text-6xl font-black mb-8 leading-tight tracking-tight text-slate-900">
+                        Service
+                    </h2>
+                    <div class="space-y-8 text-lg text-slate-600 leading-relaxed max-w-2xl font-medium">
+                        <p>
+                            As a certified services delivery partner for many of the leading technology vendors,
+                            Securenomics offers services that can be bundled with product purchases to ensure partners
+                            have what they need to best secure their customers' environments. For instance, with
+                            Securenomics, partners can streamline planning and implementation to speed solution adoption
+                            and ease onboarding.
+                        </p>
+
+                        <div
+                            class="p-6 rounded-3xl bg-slate-50 border border-slate-100 block transition-all hover:bg-white hover:shadow-xl hover:border-emerald-200">
+                            <h4 class="text-xl font-bold text-slate-900 mb-3">Rapid proof of value (POV) services:</h4>
+                            <p class="text-slate-500">
+                                help customers evaluate Netskope and Cisco Security Bundles capabilities to understand
+                                the benefits these leading technologies could bring to their environment. To request a
+                                Rapid POV - <a href="#"
+                                    class="text-brand-blue font-bold hover:underline decoration-2 underline-offset-4">please
+                                    fill out this form</a> - and an agent will schedule a POV session.
+                            </p>
+                        </div>
+
+                        <div
+                            class="p-6 rounded-3xl bg-slate-50 border border-slate-100 block transition-all hover:bg-white hover:shadow-xl hover:border-emerald-200">
+                            <h4 class="text-xl font-bold text-slate-900 mb-3">Implementation services:</h4>
+                            <p class="text-slate-500">
+                                accelerate deployment and avoid a long drawn-out process. Plus, ensure customers get
+                                started correctly with a best practice implementation designed to maximize the benefits
+                                they receive from their investments in Netskope and Cisco Security.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Succeed Section -->
+    <section id="succeed" class="py-24 lg:py-32 bg-[#F8FAFF] relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-100/30 rounded-full blur-[120px] -mr-32 -mt-32"></div>
+        <div class="absolute bottom-0 left-0 w-1/3 h-1/3 bg-emerald-100/20 rounded-full blur-[120px] -ml-32 -mb-32">
+        </div>
+
+        <div class="max-w-7xl w-full mx-auto px-6 relative z-10">
+            <div class="mb-20" appAnimateOnScroll="animate__fadeInUp">
+                <h2 class="text-4xl lg:text-7xl font-black mb-8 text-slate-900 tracking-tight">Succeed with CoManage 360
+                </h2>
+                <p class="text-xl text-slate-500 max-w-5xl leading-relaxed font-medium">
+                    Securenomics makes the procurement and ongoing management of the latest technologies fast and
+                    frictionless. With best-bundled pricing, partners can achieve the most profitable delivery of
+                    next-generation security solutions. With our distribution and any of our services, partners have all
+                    they need to deliver, manage, and maintain the best solutions for customers at the best economics.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white p-8 rounded-[40px] shadow-2xl shadow-indigo-500/5 hover:-translate-y-4 transition-all duration-500 border border-white hover:border-indigo-100 flex flex-col group"
+                    appAnimateOnScroll="animate__fadeInUp" animationDelay="100ms">
+                    <div class="relative h-48 mb-8 overflow-hidden rounded-3xl">
+                        <img src="assets/rapid-pov.jpg" alt="Rapid POV" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-black mb-4 text-slate-900 leading-tight">Rapid POV & implementation
+                            services :</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            The securenomics rapid POV offering for Netskope helps customers evaluate the benefits of
+                            Netskope leading technology benefits for their environment - to request a Rapid POV - <a
+                                href="#" class="text-brand-blue font-bold">please fill out this form</a>, and an agent
+                            will schedule a POV session. Implementation services 'Securenomics cost-effective
+                            implementation services - help customers get started correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-8 rounded-[40px] shadow-2xl shadow-indigo-500/5 hover:-translate-y-4 transition-all duration-500 border border-white hover:border-emerald-100 flex flex-col group"
+                    appAnimateOnScroll="animate__fadeInUp" animationDelay="200ms">
+                    <div class="relative h-48 mb-8 overflow-hidden rounded-3xl">
+                        <img src="assets/seed_img.jpg" alt="CoManage Support" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-black mb-4 text-slate-900 leading-tight">CoManage 360 support services
+                            :</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            provides round-the-clock support, providing access to the Securenomics team, who has vast
+                            knowledge and experience working with Netskope and Cisco Security, to help customers quickly
+                            resolve level 1 and level 2 issues. In addition, they have direct access to the vendors for
+                            an easy escalation path when necessary.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-8 rounded-[40px] shadow-2xl shadow-indigo-500/5 hover:-translate-y-4 transition-all duration-500 border border-white hover:border-orange-100 flex flex-col group"
+                    appAnimateOnScroll="animate__fadeInUp" animationDelay="300ms">
+                    <div class="relative h-48 mb-8 overflow-hidden rounded-3xl">
+                        <img src="assets/comanage_success.jpg" alt="CoManage for Success"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-black mb-4 text-slate-900 leading-tight">CoManage 360 for success :
+                        </h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            The Securenomics comanage 360 programs is designed to help customers drive maximum success
+                            with their investment in Netskope. The Securenomics program offers and ongoing health check
+                            of the system and tweaking of the policies to achieve the best outcome for customers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="mt-32 p-16 rounded-[64px] bg-slate-900 text-white relative overflow-hidden group"
+                appAnimateOnScroll="animate__fadeInUp">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                </div>
+                <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+                    <div class="max-w-2xl">
+                        <h2 class="text-4xl lg:text-5xl font-black mb-6 leading-tight">Ready to transform your
+                            <br /><span class="text-indigo-400">Security Infrastructure?</span>
+                        </h2>
+                        <p class="text-xl text-slate-400 font-medium">Join 500+ enterprises scaling their cloud security
+                            with Securenomics today.</p>
+                    </div>
+                    <button
+                        class="px-12 py-6 rounded-3xl bg-indigo-600 text-white font-black text-lg hover:bg-white hover:text-slate-900 transition-all duration-500 shadow-2xl shadow-indigo-500/20 hover:shadow-white/10 uppercase tracking-widest">
+                        Configure Now
+                    </button>
+                </div>
+            </div> -->
+        </div>
+    </section>
+</main>
+
+<app-footer></app-footer>
