@@ -79,6 +79,10 @@ export class LearnComponent implements AfterViewInit {
       }));
   });
 
+  scrollToCourses() {
+    document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
