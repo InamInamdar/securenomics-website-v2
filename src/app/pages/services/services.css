@@ -3,3 +3,27 @@
     display: block;
     width: 100%;
 }
+
+.max-container {
+    max-width: 1280px;
+    width: 100%;
+    margin-inline: auto;
+}
+
+@media (width >=96rem) {
+    .max-container {
+        max-width: 1600px;
+    }
+}
+
+
+.section-padding {
+    padding-inline: calc(var(--spacing) * 6);
+    padding-block: calc(var(--spacing) * 24);
+}
+
+@media (width >=64rem) {
+    .section-padding {
+        padding-inline: calc(var(--spacing) * 12);
+    }
+}
