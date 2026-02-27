@@ -4,6 +4,7 @@ import { Footer } from '../../layout/footer/footer';
 import { HeroSection } from "../../features/sections/hero-section/hero-section";
 import { WhyChooseUsSection } from "../../features/sections/why-choose-us-section/why-choose-us-section";
 import { MissionSection } from "../../features/sections/mission-section/mission-section";
+import { FaqSection } from "../../features/sections/faq-section/faq-section";
 import { TrustedPartner } from '../../shared/models';
 
 @Component({
@@ -14,7 +15,8 @@ import { TrustedPartner } from '../../shared/models';
     Footer,
     HeroSection,
     WhyChooseUsSection,
-    MissionSection
+    MissionSection,
+    FaqSection
   ],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
