@@ -9,6 +9,7 @@ import { CourseCardComponent } from '../../shared/components/course-card/course-
 import { Course } from './learn.data';
 import { LearnService } from './learn.service';
 import { finalize } from 'rxjs';
+import { SeoService } from '../../shared/services/seo.service';
 
 @Component({
   selector: 'app-learn',
@@ -139,7 +140,11 @@ export class LearnComponent implements AfterViewInit {
     this.skip.set(0); // Reset to first page
   }
 
-  constructor() {
+  constructor(private seo: SeoService) {
+    this.seo.updateSeo(
+      'Securenomics Training & Certification Programs | Cybersecurity Workshops',
+      'Explore Securenomics cybersecurity training programs, workshops, and certification courses from leading vendors like Netskope, Cisco, Cato Networks, and Cyberhaven. Find upcoming sessions by region and enroll today.'
+    );
     effect(() => {
       // Fetch only when these filter signals change
       this.activeCategory();

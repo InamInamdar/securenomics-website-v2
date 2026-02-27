@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, signal, OnInit } from '@angular/core';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { HeroSection } from "../../features/sections/hero-section/hero-section";
@@ -6,7 +6,7 @@ import { WhyChooseUsSection } from "../../features/sections/why-choose-us-sectio
 import { MissionSection } from "../../features/sections/mission-section/mission-section";
 import { FaqSection } from "../../features/sections/faq-section/faq-section";
 import { TrustedPartner } from '../../shared/models';
-
+import { SeoService } from '../../shared/services/seo.service';
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -23,6 +23,14 @@ import { TrustedPartner } from '../../shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
+  constructor(private seo: SeoService) { }
+
+  ngOnInit() {
+    this.seo.updateSeo(
+      'Securenomics | Security Growth Distribution',
+      'Securenomics accelerates routes to market for Netskope and Cisco Security.'
+    );
+  }
   readonly partners = signal<TrustedPartner[]>([
     { name: 'Netskope', logo: 'assets/partners/netskope.png' },
     { name: 'Cisco', logo: 'assets/partners/cisco.png' },

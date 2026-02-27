@@ -2,6 +2,7 @@
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { AnimateOnScrollDirective } from '../../shared/directives/animate-on-scroll.directive';
+import { SeoService } from '../../shared/services/seo.service';
 
 interface Stat {
   label: string;
@@ -17,6 +18,14 @@ interface Stat {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutComponent {
+  constructor(private seo: SeoService) { }
+
+  ngOnInit() {
+    this.seo.updateSeo(
+      'About Securenomics | Cybersecurity Distribution',
+      'Learn how Securenomics accelerates cloud security adoption through partner enablement, rapid deployment, and ongoing optimization of Netskope and Cisco Security solutions.'
+    );
+  }
   readonly heroContent = signal({
     title: 'Accelerating the Growth of All Your Routes to Market',
     subtitle: 'Securenomics is a premier distributor of security services for Netskope and Cisco Security, providing vast mid-market reach through our partner ecosystem in North America.'
