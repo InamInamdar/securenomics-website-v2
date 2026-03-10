@@ -1,0 +1,246 @@
+<app-header></app-header>
+
+<main class="bg-white">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-32 lg:pt-48 pb-24 bg-cyber-dark">
+    <!-- Animated Background Gradients -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-0 -left-1/4 w-1/2 h-full bg-brand-blue/10 blur-[120px] rounded-full animate-pulse"></div>
+      <div
+        class="absolute bottom-0 -right-1/4 w-1/2 h-full bg-brand-blue-dark/20 blur-[120px] rounded-full animate-pulse"
+        style="animation-delay: 2s"></div>
+    </div>
+
+    <div class="max-container relative z-20">
+      <div class="text-center" appAnimateOnScroll="animate__fadeInUp">
+        <span
+          class="inline-block py-1 px-3 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-bold tracking-widest uppercase mb-6">
+          Evaluation Program
+        </span>
+        <h1 class="max-w-5xl mx-auto text-3xl lg:text-6xl font-black text-white leading-tight tracking-tight mb-8">
+          SECURENOMICS <span class="text-gradient">PROOF OF VALUE (POV)</span> REQUEST
+        </h1>
+        <div class="max-w-5xl md:text-xl mx-auto space-y-6 text-xl text-slate-400 leading-relaxed">
+          <p>
+            The Securenomics rapid POV offering for Netskope helps customers evaluate the benefits of Netskope leading
+            technology benefits for their environment - to request a Rapid POV - please fill out this form, and an agent
+            will schedule a POV session.
+          </p>
+          <p>
+            Implementation services 'Securenomics cost-effective implementation services - help customers get started
+            correctly, so they can benefit from their investment in Netskope immediately vs. a long-drawn deployment
+            cycle POV will run for 14 days.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section-padding bg-slate-50/50">
+    <div class="max-container">
+      <div class="text-center mb-16" appAnimateOnScroll="animate__fadeInUp">
+        <span class="section-subtitle">Scope</span>
+        <h2 class="section-title text-slate-900">Netskope Features Covered</h2>
+        <p class="text-lg text-slate-600">This POV covers several key features and functions of Netskope's platform.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (feature of features; track feature.title; let i = $index) {
+        <div class="feature-card group" [appAnimateOnScroll]="'animate__fadeInUp'" [animationDelay]="(i * 100) + 'ms'">
+          <div
+            class="feature-icon-box bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+            <i [className]="feature.icon"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4">{{feature.title}}</h3>
+          <p class="text-slate-500 leading-relaxed">{{feature.description}}</p>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="section-padding bg-white relative overflow-hidden">
+    <div class="max-container">
+      <div class="text-center mb-16" appAnimateOnScroll="animate__fadeInUp">
+        <span class="section-subtitle">Process</span>
+        <h2 class="section-title text-slate-900">Timeline for Securenomics Rapid POV and Implementation</h2>
+      </div>
+
+      <div class="relative">
+        <!-- Vertical Line (Desktop) -->
+        <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-slate-100 -translate-x-1/2 hidden lg:block"></div>
+
+        <div class="space-y-12 lg:space-y-0">
+          @for (step of timelineSteps; track step.number; let i = $index; let even = $even) {
+          <div class="relative flex flex-col lg:flex-row items-center"
+            [appAnimateOnScroll]="even ? 'animate__fadeInLeft' : 'animate__fadeInRight'">
+            <!-- Step Number Bubble -->
+            <div
+              class="absolute left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center z-10 hidden lg:flex">
+              <span class="text-blue-600 font-bold">{{step.number}}</span>
+            </div>
+
+            <!-- Content Card -->
+            <div
+              [className]="'w-full lg:w-[45%] p-8 rounded-3xl border border-slate-100 shadow-sm bg-white hover:shadow-md transition-shadow ' + (even ? 'lg:mr-auto' : 'lg:ml-auto text-right')">
+              <div
+                [className]="'flex items-center gap-4 mb-4 ' + (even ? 'justify-start' : 'justify-end lg:flex-row-reverse')">
+                <span
+                  class="lg:hidden w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">{{step.number}}</span>
+                <h3 class="text-2xl font-bold text-slate-900">{{step.title}}</h3>
+              </div>
+              <p class="text-slate-600 leading-relaxed">{{step.description}}</p>
+            </div>
+          </div>
+
+          <!-- Extra info for final step if needed -->
+          @if (i === 3) {
+          <div class="lg:w-2/3 mx-auto mt-12 p-8 rounded-3xl bg-blue-50 border border-blue-100"
+            appAnimateOnScroll="animate__fadeInUp">
+            <h4 class="font-bold text-blue-900 mb-4 text-center">Final Steps & Handover:</h4>
+            <ul class="grid md:grid-cols-3 gap-6">
+              <li class="flex items-start gap-3">
+                <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                <span class="text-sm text-blue-800">Finalize the bill of materials and discuss procurement.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                <span class="text-sm text-blue-800">Submit Purchase Order and signed paperwork.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                <span class="text-sm text-blue-800">Schedule implementations start date and co-manage sessions.</span>
+              </li>
+            </ul>
+          </div>
+          }
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form Section -->
+  <section class="section-padding bg-slate-50/50">
+    <div class="max-container">
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-[40px] shadow-2xl shadow-blue-500/5 p-8 lg:p-16 border border-slate-100"
+          appAnimateOnScroll="animate__fadeInUp">
+          <div class="mb-12 border-b border-slate-100 pb-8">
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Proof of Value (POV) Request Form</h2>
+            <p class="text-slate-500">Transforming your security starts with a simple request. Fill out the details
+              below.</p>
+          </div>
+
+          <form [formGroup]="povForm" (ngSubmit)="onSubmit()" class="space-y-12">
+            <!-- Contact Details Grid -->
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 mb-8 flex items-center gap-2">
+                <span
+                  class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm">01</span>
+                Contact Information
+              </h3>
+              <div class="grid md:grid-cols-2 gap-8">
+                <div class="form-group">
+                  <label class="form-label">Name *</label>
+                  <input type="text" formControlName="name" class="form-input" placeholder="Please Add Name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Company *</label>
+                  <input type="text" formControlName="company" class="form-input" placeholder="Please Add Company Name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone *</label>
+                  <input type="tel" formControlName="phone" class="form-input" placeholder="Please Add Phone Number">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Job Title *</label>
+                  <input type="text" formControlName="jobTitle" class="form-input" placeholder="Please Add Job Title">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Business Email *</label>
+                  <input type="email" formControlName="businessEmail" class="form-input"
+                    placeholder="Please Add Business Email">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Number of employees *</label>
+                  <select formControlName="employeeCount" class="form-input">
+                    <option value="" disabled selected>Select Number of employees</option>
+                    <option value="1-50">1-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="201-500">201-500</option>
+                    <option value="501-1000">501-1000</option>
+                    <option value="1000+">1000+</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project Details -->
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 mb-8 flex items-center gap-2">
+                <span
+                  class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm">02</span>
+                Project Details
+              </h3>
+              <div class="grid md:grid-cols-2 gap-8">
+                <div class="form-group">
+                  <label class="form-label">Project Completion Date *</label>
+                  <input type="date" formControlName="projectCompletionDate" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Success Criteria</label>
+                  <textarea formControlName="successCriteria" class="form-input min-h-[120px]"
+                    placeholder="Please Specify Success Criteria"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Cases -->
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span
+                  class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm">03</span>
+                Security Use Cases
+              </h3>
+              <p class="text-sm text-slate-500 mb-8">Please choose all that apply:</p>
+
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @for (useCase of useCases; track useCase.id) {
+                <label
+                  class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 hover:border-blue-500/30 hover:bg-blue-50/30 transition-all cursor-pointer group">
+                  <input type="checkbox"
+                    class="w-5 h-5 mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                  <span class="text-sm text-slate-600 group-hover:text-slate-900 leading-tight">{{useCase.label}}</span>
+                </label>
+                }
+              </div>
+            </div>
+
+            <!-- Additional Comments -->
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 mb-8 flex items-center gap-2">
+                <span
+                  class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm">04</span>
+                Any additional comments:
+              </h3>
+              <textarea formControlName="comments" class="form-input min-h-[150px]"
+                placeholder="Any additional comments"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-100">
+              <button type="submit" class="cta-button cta-primary px-12 py-4">Submit Request</button>
+              <button type="button" routerLink="/services"
+                class="cta-button bg-slate-100 text-slate-600 hover:bg-slate-200 px-12 py-4 rounded-xl font-bold transition-all">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

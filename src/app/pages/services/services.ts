@@ -24,11 +24,57 @@ import { RouterLink } from "@angular/router";
 export class ServicesComponent implements AfterViewInit {
     @ViewChild('heroVideo') videoElement!: ElementRef<HTMLVideoElement>;
 
+    journeySteps = [
+        {
+            number: '01',
+            icon: 'pi pi-book',
+            image: 'assets/seed_img.jpg',
+            title: 'Learn',
+            description: 'Understand Modern Security Technologies.',
+            targetId: 'learn',
+            delay: '100ms'
+        },
+        {
+            number: '02',
+            icon: 'pi pi-verified',
+            image: 'assets/rapid-pov.jpg',
+            title: 'Prove',
+            description: 'Validate Value with Rapid Proof of Value.',
+            targetId: 'prove',
+            delay: '200ms'
+        },
+        {
+            number: '03',
+            icon: 'pi pi-send',
+            image: 'assets/service_img.jpg',
+            title: 'Deploy',
+            description: 'Accelerate Deployment and Adoption.',
+            targetId: 'deploy',
+            delay: '300ms'
+        },
+        {
+            number: '04',
+            icon: 'pi pi-chart-line',
+            image: 'assets/comanage_success.jpg',
+            title: 'Optimize',
+            description: 'Maximize Long-Term Security Outcomes.',
+            targetId: 'optimize',
+            delay: '400ms'
+        }
+    ];
+
     constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
     ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId)) {
             this.playVideo();
+        }
+    }
+
+    scrollToSection(targetId: string) {
+        const element = document.getElementById(targetId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 

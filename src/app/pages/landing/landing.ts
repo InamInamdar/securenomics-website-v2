@@ -27,7 +27,9 @@ export class LandingComponent {
     { name: 'Netskope', logo: 'assets/partners/netskope.png' },
     { name: 'Cisco', logo: 'assets/partners/cisco.png' },
     { name: 'Cyberhaven', logo: 'assets/partners/cyberhaven%20copy.svg' },
-    { name: 'Cato', logo: 'assets/partners/cato3.svg' }
+    { name: 'Cato', logo: 'assets/partners/cato3.svg' },
+    { name: 'CDW', logo: 'assets/partners/cdw-logo.svg' },
+    { name: 'SHI', logo: 'assets/partners/SHI_LOGO.svg' }
   ]);
 
   readonly marqueePartners = computed(() => [

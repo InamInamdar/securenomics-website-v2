@@ -1,0 +1,87 @@
+@reference "../../../styles.css";
+
+.text-gradient {
+  background: linear-gradient(to right, #60a5fa, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.feature-card {
+  @apply bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-500/20;
+}
+
+.feature-icon-box {
+  @apply w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-6 transition-all duration-300;
+}
+
+/* Timeline specific styles */
+.timeline-card {
+  @apply p-8 rounded-3xl border border-slate-100 shadow-sm bg-white hover:shadow-md transition-shadow relative;
+}
+
+/* Form Styles */
+.form-group {
+  @apply flex flex-col gap-2;
+}
+
+.form-label {
+  @apply text-sm font-bold text-slate-800 ml-1;
+}
+
+.form-input {
+  @apply w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/30 text-slate-900 transition-all duration-200 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400 outline-none;
+}
+
+select.form-input {
+  @apply appearance-none cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  background-size: 1.25rem;
+}
+
+.section-subtitle {
+  @apply text-blue-600 font-bold tracking-widest uppercase text-sm mb-4 block;
+}
+
+.section-title {
+  @apply text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-6;
+}
+
+.cta-button {
+  @apply inline-flex items-center justify-center rounded-xl font-bold transition-all duration-300 active:scale-95;
+}
+
+.cta-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/25;
+}
+
+/* Checkbox customization */
+input[type="checkbox"] {
+  @apply cursor-pointer transition-colors focus:ring-offset-0;
+}
+
+/* Animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .section-padding {
+    @apply py-16 px-6;
+  }
+}

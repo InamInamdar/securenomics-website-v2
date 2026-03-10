@@ -18,13 +18,13 @@ interface Stat {
 })
 export class AboutComponent {
   readonly heroContent = signal({
-    title: 'Accelerating the Growth of All Your Routes to Market',
-    subtitle: 'Securenomics is a premier distributor of security services for Netskope and Cisco Security, providing vast mid-market reach through our partner ecosystem in North America.'
+    title: 'Helping Customers Achieve Maximum ROI from Modern Security Technologies',
+    subtitle: 'Securenomics enables organizations to learn, evaluate, and adopt leading security platforms such as Netskope and Cisco Security. Through our partner ecosystem across North America, we accelerate successful adoption and deliver measurable security outcomes.'
   });
 
   readonly missionContent = signal({
-    main: 'We enable the success of our partners through our comprehensive approach, which encompasses market seeding and education, streamlined planning and adoption — with rapid POV and implementation services — and ongoing value creation with our Comanage 360 services. All capabilities are delivered in the cloud to help our partners seamlessly grow their business.',
-    secondary: 'We work closely with Netskope and Cisco Security to drive awareness of the latest security offerings and maximize the effectiveness of channel partners and online marketplaces. At the same time, we make it easier for VARs, integrators, and service providers to accelerate adoption, streamline procurement, and optimize deployments for their customers to create maximum value and increase satisfaction and loyalty.'
+    main: 'We help partners and customers successfully learn, evaluate, and adopt modern security technologies to achieve measurable outcomes and maximize ROI. Our comprehensive approach combines market education, streamlined planning and adoption, rapid proof-of-value and implementation services, and ongoing optimization through our Comanage 360 services. All capabilities are delivered in the cloud to help partners scale efficiently and continuously deliver value to their customers.',
+    secondary: 'We work closely with Netskope and Cisco Security , Cato Networks & Cyberhaven to help customers understand and adopt the latest security innovations while enabling partners to deliver successful deployments. At the same time, we simplify how VARs, integrators, and service providers help their customers evaluate solutions, accelerate adoption, streamline procurement, and optimize security outcomes.'
   });
 
   readonly whoWeAre = signal({
@@ -40,10 +40,11 @@ export class AboutComponent {
   ]);
 
   readonly impactPoints = signal([
-    { id: 1, text: 'Accelerate adoption and streamline procurement.' },
-    { id: 2, text: 'Optimize deployments for maximum customer value.' },
-    { id: 3, text: 'Increase satisfaction and long-term customer loyalty.' },
-    { id: 4, text: 'Cloud-delivered capabilities for agility and scale.' }
+    { id: 1, text: 'Learn and evaluate modern security technologies with confidence.' },
+    { id: 2, text: 'Accelerate adoption through rapid proof-of-value and implementation.' },
+    { id: 3, text: 'Optimize deployments to maximize ROI and measurable outcomes.' },
+    { id: 4, text: 'Deliver long-term customer value, satisfaction, and loyalty.' },
+    { id: 5, text: 'Scale securely with cloud-delivered capabilities for agility and growth.' }
   ]);
 }
 
