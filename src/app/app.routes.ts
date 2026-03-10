@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -20,5 +20,9 @@ export const routes: Routes = [
   {
     path: 'learn/:id',
     loadComponent: () => import('./pages/course-detail/course-detail').then((m) => m.CourseDetailComponent)
+  },
+  {
+    path: 'pov-request',
+    loadComponent: () => import('./pages/pov-request/pov-request').then((m) => m.PovRequestComponent)
   }
 ];
