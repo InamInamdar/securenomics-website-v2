@@ -1,3 +1,5 @@
+@reference "../../../styles.css";
+
 /* Services page styles handled via Tailwind CSS in template */
 :host {
     display: block;
@@ -26,4 +28,160 @@
     .section-padding {
         padding-inline: calc(var(--spacing) * 12);
     }
+}
+
+/* Hero CTA Buttons */
+.cta-button {
+    @apply relative flex items-center justify-center px-10 py-5 rounded-2xl text-base font-bold uppercase tracking-widest transition-all duration-300;
+}
+
+.cta-primary {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 border-none;
+}
+
+.cta-primary:hover {
+    @apply -translate-y-1 shadow-xl shadow-blue-500/40 brightness-110;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+.cta-secondary {
+    @apply bg-transparent text-white border-2 border-white/20 backdrop-blur-xl;
+}
+
+.cta-secondary:hover {
+    @apply -translate-y-1 bg-white/10 border-white/40;
+}
+
+/* Animation delay for CTAs */
+.cta-container {
+    animation-delay: 0.4s;
+}
+
+@media (max-width: 639.98px) {
+    .cta-button {
+        @apply w-full;
+    }
+}
+
+/* Redesigned Sections Styling */
+.section-subtitle {
+    @apply text-blue-600 font-bold tracking-widest uppercase text-sm mb-4 block;
+}
+
+.section-title {
+    @apply text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-6;
+}
+
+/* Journey Flow Timeline */
+.journey-wrapper {
+    @apply py-10 px-4 sm:px-0;
+}
+
+.journey-container {
+    @apply grid gap-8 relative;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+    .journey-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .journey-container {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.journey-step {
+    @apply flex flex-col p-0 rounded-[40px] bg-white border border-slate-100 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 overflow-hidden relative z-10;
+}
+
+.step-header {
+    @apply flex items-center justify-between p-8 pb-0;
+}
+
+.step-number {
+    @apply text-5xl font-black text-slate-100 select-none;
+    -webkit-text-stroke: 1px rgba(15, 23, 42, 0.05);
+}
+
+.step-icon {
+    @apply w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100/50 transition-transform duration-500 text-xl;
+}
+
+.journey-step:hover .step-icon {
+    @apply scale-110 bg-blue-600 text-white border-blue-600;
+}
+
+.step-image-box {
+    @apply w-full h-48 overflow-hidden mb-0 px-8;
+}
+
+.step-image {
+    @apply w-full h-full object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105;
+}
+
+.step-content {
+    @apply p-8 pt-6;
+}
+
+/* Journey Connector Line */
+@media (min-width: 1024px) {
+    .journey-connector {
+        @apply absolute top-[140px] left-0 w-full h-0.5 bg-slate-100 z-0;
+    }
+
+    .connector-progress {
+        @apply h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-1000 ease-in-out;
+        width: 100%;
+        /* Show fully for now, can be animated with IntersectionObserver if needed */
+    }
+}
+
+/* Vertical connector for mobile */
+@media (max-width: 767.98px) {
+    .journey-container::before {
+        content: '';
+        @apply absolute left-8 top-0 w-0.5 h-full bg-slate-100 z-0;
+    }
+}
+
+/* Feature Cards */
+.feature-card {
+    @apply p-8 rounded-[32px] bg-white border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-2 flex flex-col;
+}
+
+.feature-icon-box {
+    @apply w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6 text-xl;
+}
+
+/* Checklist Items */
+.checklist-item {
+    @apply flex items-start gap-4 p-5 rounded-2xl bg-slate-50/50 border border-slate-100/50 hover:bg-white hover:shadow-md transition-all duration-300;
+}
+
+.check-icon {
+    @apply mt-1 w-5 h-5 text-emerald-500 flex-shrink-0;
+}
+
+/* Outcome Grid */
+.outcome-card {
+    @apply p-8 rounded-[40px] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex flex-col items-center text-center;
+}
+
+.outcome-icon {
+    @apply w-14 h-14 rounded-2xl bg-slate-50 text-slate-900 flex items-center justify-center mb-6 text-2xl;
+}
+
+/* Partner Logo Grid */
+.partner-logo-container {
+    @apply flex flex-wrap justify-center items-center gap-12 py-10 opacity-60 grayscale hover:grayscale-0 transition-all duration-700;
+}
+
+/* Gradient backgrounds for specific sections */
+.bg-subtle-gradient {
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.03), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.03), transparent 40%);
 }

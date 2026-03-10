@@ -40,7 +40,7 @@ export class LearnComponent implements AfterViewInit {
   skip = signal(0);
   take = signal(9);
 
-  categories = ['All', 'Workshops', 'Certification', 'Cato Networks', 'Netskope', 'Cisco', 'Cyberhaven'];
+  categories = ['All', 'Workshops', 'Cato Networks', 'Netskope', 'Cisco', 'Cyberhaven'];
   activeCategory = signal('All');
   underlineStyle = signal({ left: '0px', width: '0px' });
 
@@ -166,7 +166,7 @@ export class LearnComponent implements AfterViewInit {
     let vendor = '';
 
     if (category === 'Workshops') trainingType = 'Workshop';
-    else if (category === 'Certification') trainingType = 'Certification';
+    // else if (category === 'Certification') trainingType = 'Certification';
     else if (['Cato Networks', 'Netskope', 'Cisco', 'Cyberhaven'].includes(category)) {
       vendor = category;
     }
