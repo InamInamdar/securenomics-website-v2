@@ -1,21 +1,25 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, viewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
+import { RegistrationFormComponent } from '../../shared/components/registration-form/registration-form';
 import { CourseDetailService } from './course-detail.service';
 import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-course-detail',
     standalone: true,
-    imports: [CommonModule, RouterLink, Header, Footer],
+    imports: [CommonModule, RouterLink, Header, Footer, RegistrationFormComponent],
     templateUrl: './course-detail.html',
     styleUrl: './course-detail.css'
 })
 export class CourseDetailComponent implements OnInit {
+    private formBuilder = inject(FormBuilder);
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private sanitizer = inject(DomSanitizer);
     private courseDetailService = inject(CourseDetailService);
 
@@ -23,19 +27,168 @@ export class CourseDetailComponent implements OnInit {
     loading = signal(true);
     error = signal<string | null>(null);
 
+    // Registration state
+    registrationStep = signal(1);
+    verifiedEmail = '';
+    isRegistering = signal(false);
+    existingUser: any = null;
+    userRole: string = '';
+    userId: number | null = null;
+
+    registrationSection = viewChild<ElementRef>('registrationSection');
+
     ngOnInit(): void {
-        const id = this.route.snapshot.paramMap.get('id');
+        const id = this.route.snapshot.paramMap.get('id') || '';
         if (!id) {
             this.error.set('Invalid course ID.');
             this.loading.set(false);
             return;
         }
-        this.courseDetailService.getSchedule(id).pipe(
-            finalize(() => this.loading.set(false))
+        else {
+            this.courseDetailService.getScheduleById(id).pipe(
+                finalize(() => this.loading.set(false))
+            ).subscribe({
+                next: (data) => this.schedule.set(data),
+                error: () => this.error.set('Failed to load course details. Please try again later.')
+            });
+        }
+    }
+
+    handleVerified(email: string) {
+        if (this.isRegistering()) return;
+
+        this.isRegistering.set(true);
+        this.courseDetailService.getUserByEmail(email).pipe(
+            finalize(() => this.isRegistering.set(false))
         ).subscribe({
-            next: (data) => this.schedule.set(data),
-            error: () => this.error.set('Failed to load course details. Please try again later.')
+            next: (response) => {
+                const user = response?.user;
+                const role = user?.role;
+
+                if (role === 'Admin' || role === 'Instructor') {
+                    alert('Email exists as Admin/Instructor. Please use a different email or contact support.');
+                    return;
+                }
+
+                if (role === 'Student') {
+                    // Existing Student logic
+                    this.existingUser = user;
+                    this.userId = user.id;
+                    this.userRole = role;
+                    this.verifiedEmail = email;
+                    this.registrationStep.set(2);
+                } else {
+                    // New User or other logic
+                    this.existingUser = null;
+                    this.userId = null;
+                    this.userRole = '';
+                    this.verifiedEmail = email;
+                    this.registrationStep.set(2);
+                }
+
+                // Scroll to the registration section after it's rendered
+                setTimeout(() => {
+                    const element = this.registrationSection()?.nativeElement;
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            },
+            error: () => {
+                // If 404 or other error, treat as new user as per typical flow
+                this.existingUser = null;
+                this.userId = null;
+                this.userRole = '';
+                this.verifiedEmail = email;
+                this.registrationStep.set(2);
+
+                setTimeout(() => {
+                    const element = this.registrationSection()?.nativeElement;
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            }
         });
+    }
+
+    onSubmitRegistration(register: any) {
+        if (this.isRegistering()) return;
+
+        this.isRegistering.set(true);
+        const sched = this.schedule();
+
+        let paymentMethodValue = register.paymentMethod || "";
+        const trainingType = sched?.course?.category?.training_type || sched?.course?.category?.trainingType;
+        if (trainingType === "Certification") {
+            if (paymentMethodValue === "Purchase Order") {
+                paymentMethodValue = "PURCHASE_ORDER";
+            } else if (paymentMethodValue === "Credit Card") {
+                paymentMethodValue = "CREDIT_CARD";
+            }
+        }
+
+        let apiCall;
+        if (this.existingUser && this.userId) {
+            // Case 2: Existing Student - Update registration
+            const updatePayload = {
+                email: this.verifiedEmail,
+                voucherCode: register.voucher_code || "",
+                payForAttendance: paymentMethodValue,
+                name: register.name,
+                city: this.existingUser.city || "",
+                mobileNo: register.phone,
+                company: register.company,
+                zipCode: this.existingUser.zipCode || "",
+                country: this.existingUser.country || "",
+                promotionCode: this.existingUser.promotionCode || "",
+                additionalComments: register.comments || "",
+                alternativeEmailId: register.alternateEmail || "",
+                autoEnrollStudent: sched.auto_enroll_student || sched.autoEnrollStudent || false,
+                courseScheduleId: sched.id,
+                fromWhere: "Netskope",
+            };
+            apiCall = this.courseDetailService.updateUser(updatePayload, this.userId);
+        } else {
+            // Case 3: New User - Register
+            const registerPayload = {
+                email: this.verifiedEmail,
+                voucherCode: register.voucher_code || "",
+                payForAttendance: paymentMethodValue,
+                name: register.name,
+                city: "",
+                mobileNo: register.phone,
+                company: register.company,
+                alternativeEmailId: register.alternateEmail || "",
+                jobTitle: register.title,
+                autoEnrollStudent: sched.auto_enroll_student || sched.autoEnrollStudent || false,
+                zipCode: "",
+                country: "",
+                promotionCode: "",
+                additionalComments: register.comments || "",
+                isAuth: false,
+                courseScheduleId: sched.id,
+                organizationId: sched?.course?.category?.organization_id || sched?.course?.category?.organizationId || sched?.course?.organization_id,
+                fromWhere: "Netskope",
+            };
+            apiCall = this.courseDetailService.registerUser(registerPayload);
+        }
+
+        apiCall.pipe(
+            finalize(() => this.isRegistering.set(false))
+        ).subscribe({
+            next: () => {
+                this.router.navigate(['/confirmation']);
+            },
+            error: (err) => {
+                console.error('Registration error:', err);
+                alert('Error While Registration. Please try again.');
+            }
+        });
+    }
+
+    handleBack() {
+        this.registrationStep.set(1);
     }
 
     get safeDescription(): SafeHtml {
@@ -83,3 +236,4 @@ export class CourseDetailComponent implements OnInit {
         return mapping[code] || code;
     }
 }
+

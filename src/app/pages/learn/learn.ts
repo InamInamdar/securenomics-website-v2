@@ -6,8 +6,7 @@ import { SelectModule } from 'primeng/select';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { CourseCardComponent } from '../../shared/components/course-card/course-card';
-import { Course } from './learn.data';
-import { LearnService } from './learn.service';
+import { CourseDetailService } from '../course-detail/course-detail.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -26,7 +25,7 @@ import { finalize } from 'rxjs';
   styleUrl: './learn.css',
 })
 export class LearnComponent implements AfterViewInit {
-  private learnService = inject(LearnService);
+  private courseDetailService = inject(CourseDetailService);
 
   schedules = signal<any[]>([]);
   totalSchedules = signal(0);
@@ -172,15 +171,7 @@ export class LearnComponent implements AfterViewInit {
     }
 
     // Always fetch a large pool to allow client-side windowing/vendor filtering
-    this.learnService.getSchedules({
-      skip: 0,
-      take: 1000,
-      search: this.searchQuery(),
-      region: this.activeRegion(),
-      training_type: trainingType,
-      order: 'asc',
-      sortby: 'start_date'
-    }).pipe(
+    this.courseDetailService.getSchedule(this.activeRegion(), trainingType).pipe(
       finalize(() => this.loading.set(false))
     ).subscribe({
       next: (res) => {
@@ -188,7 +179,7 @@ export class LearnComponent implements AfterViewInit {
 
         if (vendor) {
           // Client-side filter for vendors specifically
-          data = data.filter(item =>
+          data = data.filter((item: any) =>
             item.course?.category?.organization?.name === vendor
           );
         }

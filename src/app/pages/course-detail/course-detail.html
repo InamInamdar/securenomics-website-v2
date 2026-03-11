@@ -180,96 +180,64 @@
                         <div class="cd-description prose" [innerHTML]="safeDescription"></div>
                     </div>
 
-                    <!-- Sidebar: quick facts -->
+                    <!-- Sidebar: Registration Form -->
                     <aside class="cd-details-aside cd-reveal" style="animation-delay:100ms">
-                        <div class="cd-sidebar-card">
-                            <h3 class="cd-sidebar-title">Registration</h3>
-
-                            @if (schedule()?.startDate) {
-                            <div class="cd-sidebar-row">
-                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <div>
-                                    <p class="cd-sidebar-label">Start Date</p>
-                                    <p class="cd-sidebar-value">{{ formatDate(schedule()?.startDate,
-                                        schedule()?.timezone) }}</p>
-                                </div>
-                            </div>
-                            }
-
-                            @if (schedule()?.region) {
-                            <div class="cd-sidebar-row">
-                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-                                </svg>
-                                <div>
-                                    <p class="cd-sidebar-label">Region</p>
-                                    <p class="cd-sidebar-value">{{ mapRegion(schedule()?.region) }}</p>
-                                </div>
-                            </div>
-                            }
-
-                            @if (schedule()?.status) {
-                            <div class="cd-sidebar-row">
-                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <div>
-                                    <p class="cd-sidebar-label">Status</p>
-                                    <p class="cd-sidebar-value">{{ schedule()?.status }}</p>
-                                </div>
-                            </div>
-                            }
-
-                            @if (schedule()?.course?.category?.trainingType) {
-                            <div class="cd-sidebar-row">
-                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
-                                <div>
-                                    <p class="cd-sidebar-label">Type</p>
-                                    <p class="cd-sidebar-value">{{ schedule()?.course?.category?.trainingType }}</p>
-                                </div>
-                            </div>
-                            }
-
-                            <!-- CTA inside sidebar -->
-                            <div class="mt-8">
-                                @if (schedule()?.registrationLink) {
-                                <a [href]="schedule()?.registrationLink" target="_blank" rel="noopener noreferrer"
-                                    class="cd-cta-btn cd-cta-primary w-full text-center">
-                                    Register Now
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        @if (registrationStep() === 1) {
+                            <app-registration-form 
+                                [courseTitle]="schedule()?.course?.title"
+                                [step]="1"
+                                [isLoading]="isRegistering()"
+                                [prefillData]="existingUser"
+                                (onVerified)="handleVerified($event)"
+                            ></app-registration-form>
+                        } @else {
+                            <!-- Verified State in Sidebar -->
+                            <div class="bg-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-500/20 animate__animated animate__fadeIn border border-blue-400/30">
+                                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
-                                </a>
-                                } @else {
-                                <a href="mailto:training@securenomics.com?subject=Registration Request&body=I am interested in registering for: {{ schedule()?.course?.title }}"
-                                    class="cd-cta-btn cd-cta-secondary w-full text-center">
-                                    Request Registration
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Email Verified</h3>
+                                <p class="text-blue-100 text-sm mb-6 leading-relaxed">Continue below to complete your registration details.</p>
+                                <button (click)="handleBack()" class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                     </svg>
-                                </a>
-                                }
+                                    Change Email
+                                </button>
                             </div>
-                        </div>
+                        }
                     </aside>
 
                 </div>
             </div>
         </section>
+
+        <!-- Stage 2: Full Registration Form (Appears below content) -->
+        @if (registrationStep() === 2) {
+            <section #registrationSection class="py-24 bg-slate-50 border-y border-slate-100 animate__animated animate__fadeIn">
+                <div class="max-container px-6 lg:px-12 text-center">
+                    <div class="mb-12">
+                        <span class="inline-block py-1.5 px-4 rounded-full bg-blue-100 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-4 animate__animated animate__fadeInDown">Part 2: Enrollment</span>
+                        <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-4">Complete Your Registration</h2>
+                        <p class="text-slate-500 max-w-2xl mx-auto text-base md:text-lg">
+                            Please provide your professional details to secure your seat for <span class="text-blue-600 font-bold uppercase">{{ schedule()?.course?.title }}</span>.
+                        </p>
+                    </div>
+
+                    <app-registration-form 
+                        [courseTitle]="schedule()?.course?.title"
+                        [step]="2"
+                        [initialEmail]="verifiedEmail"
+                        [isLoading]="isRegistering()"
+                        [prefillData]="existingUser"
+                        (onBack)="handleBack()"
+                        (onSubmitRegistration)="onSubmitRegistration($event)"
+                    ></app-registration-form>
+                </div>
+            </section>
+        }
 
         <!-- ── 3. BOTTOM CTA BANNER ── -->
         <section class="cd-cta-banner">
