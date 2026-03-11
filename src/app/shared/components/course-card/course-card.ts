@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="group relative flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-slate-100 h-full">
+    <div class="group relative flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300 transform hover:-translate-y-[6px] border border-[#f1f5f9] h-full">
       <!-- Card Header: Dark gradient with logo -->
       <div 
         class="relative h-40 flex items-center justify-center p-8 bg-gradient-to-br"
@@ -21,7 +21,7 @@ import { RouterLink } from '@angular/router';
         />
         
         <!-- Date Badge -->
-        <div class="absolute top-4 left-4 bg-[#E30613] text-white px-3 py-1 rounded-md text-[10px] font-black tracking-widest uppercase shadow-sm">
+        <div class="absolute top-4 left-4 bg-slate-100 text-slate-500 border border-slate-300 backdrop-blur-md px-3 py-1 rounded-md text-[10px] font-black tracking-widest uppercase shadow-[0_4px_10px_rgba(0,0,0,0.05)]">
           {{ date }}
         </div>
       </div>
