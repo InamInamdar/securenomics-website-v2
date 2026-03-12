@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 
 export interface ScheduleResponse {
     total: number;
@@ -12,7 +11,7 @@ export interface ScheduleResponse {
     providedIn: 'root'
 })
 export class LearnService {
-    private baseUrl = environment.baseUrls.SDLP_EXPOSED_URL + 'exposed/schedules';
+    private baseUrl = 'https://snlp-backend.comanage360.com/exposed/schedules';
 
     constructor(private http: HttpClient) { }
 
