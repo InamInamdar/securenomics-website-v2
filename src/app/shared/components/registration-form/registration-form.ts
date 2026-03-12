@@ -26,6 +26,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
                 [class.border-red-500]="emailError"
                 placeholder="e.g. name@company.com"
                 (input)="emailError = null"
+                (blur)="checkEmailOnBlur()"
               >
               <p class="text-[11px] text-slate-400 mt-2 leading-relaxed italic">
                 Note: Must be a business email address. Email accounts from domains like gmail, hotmail, yahoo etc. will not be accepted.
@@ -39,6 +40,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
               <button 
                 type="button" 
                 (click)="nextStep()" 
+                (pointerdown)="prepareNextClick()"
                 class="cta-button cta-primary w-full py-4 text-sm relative overflow-hidden"
                 [disabled]="regForm.get('businessEmail')?.invalid || isLoading"
               >
@@ -65,14 +67,21 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
       @if (step === 2) {
         <!-- Full Form Section (Styled as Section Card) -->
         <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl shadow-blue-500/5 border border-slate-100 overflow-hidden animate__animated animate__fadeInUp">
-          <div class="px-8 py-6 border-b border-slate-50 bg-slate-50/50">
+          <div class="px-8 py-6 border-b border-slate-50 bg-slate-50/50 text-center">
             <h2 class="text-2xl font-black text-slate-900">Registration Details</h2>
             <p class="text-sm text-slate-500 mt-1">Please provide your professional information for the course.</p>
           </div>
 
           <form [formGroup]="regForm" class="p-8 lg:p-12">
             <div class="space-y-8">
-              <!-- Basic Info -->
+              <!-- Business Email (Disabled) -->
+              <div class="form-group">
+                <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Business Email</label>
+                <input type="email" formControlName="businessEmail" class="form-input bg-slate-50 text-slate-500 cursor-not-allowed">
+              </div>
+
+              @if (!isRegisteredUser) {
+                <!-- Basic Info -->
               <div class="grid md:grid-cols-2 gap-8">
                 <div class="form-group">
                   <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Full Name *</label>
@@ -96,19 +105,23 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
                 </div>
               </div>
 
-              <!-- Contact & Payment -->
+              <!-- Contact -->
               <div class="grid md:grid-cols-2 gap-8">
                 <div class="form-group">
                   <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Alternate Email</label>
                   <input type="email" formControlName="alternateEmail" class="form-input" placeholder="Optional backup email">
                 </div>
-                <div class="form-group">
-                  <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Payment Method</label>
-                  <select formControlName="paymentMethod" class="form-input">
-                    <option value="Purchase Order">Purchase Order</option>
-                    <option value="Credit Card">Credit Card</option>
-                  </select>
-                </div>
+                <div class="hidden"></div>
+              </div>
+              }
+
+              <!-- Payment -->
+              <div class="form-group">
+                <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Payment Method</label>
+                <select formControlName="paymentMethod" class="form-input">
+                  <option value="Purchase Order">Purchase Order</option>
+                  <option value="Credit Card">Credit Card</option>
+                </select>
               </div>
 
               <!-- Comments -->
@@ -171,13 +184,17 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   @Input() initialEmail: string = '';
   @Input() isLoading: boolean = false;
   @Input() prefillData: any = null;
+  @Input() isExistingStudent: boolean = false;
+  @Input() isRegisteredUser: boolean = false;
 
+  @Output() onEmailCheck = new EventEmitter<string>();
   @Output() onVerified = new EventEmitter<string>();
   @Output() onBack = new EventEmitter<void>();
   @Output() onSubmitRegistration = new EventEmitter<any>();
 
   regForm!: FormGroup;
   emailError: string | null = null;
+  private suppressBlurEmailCheck = false;
 
   restrictedDomains = [
     'hotmail.com', 'gmail.com', 'yahoo.com', 'outlook.com', 
@@ -187,7 +204,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.regForm = this.fb.group({
-      businessEmail: [this.initialEmail, [Validators.required, Validators.email]],
+      businessEmail: [{ value: this.initialEmail, disabled: this.step === 2 }, [Validators.required, Validators.email]],
       name: ['', Validators.required],
       company: ['', Validators.required],
       title: ['', Validators.required],
@@ -196,18 +213,52 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       paymentMethod: ['Purchase Order'],
       comments: ['']
     });
+    this.updateValidators();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['initialEmail'] && this.regForm) {
       this.regForm.get('businessEmail')?.setValue(changes['initialEmail'].currentValue);
     }
-    if (changes['prefillData'] && changes['prefillData'].currentValue && this.regForm) {
-      const data = changes['prefillData'].currentValue;
-      this.regForm.patchValue({
-        name: data.name || '',
-        company: data.company || '',
-        phone: data.mobile_no || ''
+    if (changes['step'] && this.regForm) {
+      if (this.step === 2) {
+        this.regForm.get('businessEmail')?.disable();
+      } else {
+        this.regForm.get('businessEmail')?.enable();
+      }
+    }
+    if (changes['prefillData'] && this.regForm) {
+      this.updateValidators();
+      if (changes['prefillData'].currentValue) {
+        const data = changes['prefillData'].currentValue;
+        this.regForm.patchValue({
+          name: data.name || '',
+          company: data.company || '',
+          phone: data.mobile_no || ''
+        });
+      }
+    }
+    if (changes['isExistingStudent'] && this.regForm) {
+      this.updateValidators();
+    }
+    if (changes['isRegisteredUser'] && this.regForm) {
+      this.updateValidators();
+    }
+  }
+
+  private updateValidators() {
+    if (!this.regForm) return;
+
+    const fields = ['name', 'company', 'title', 'phone'];
+    if (this.isRegisteredUser || this.isExistingStudent || this.prefillData) {
+      fields.forEach(f => {
+        this.regForm.get(f)?.clearValidators();
+        this.regForm.get(f)?.updateValueAndValidity();
+      });
+    } else {
+      fields.forEach(f => {
+        this.regForm.get(f)?.setValidators(Validators.required);
+        this.regForm.get(f)?.updateValueAndValidity();
       });
     }
   }
@@ -216,20 +267,30 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     const email = this.regForm.get('businessEmail')?.value;
     if (!email) return;
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      this.emailError = 'Please enter a valid email address';
-      return;
-    }
-
-    const domain = email.split('@')[1]?.toLowerCase();
-    if (this.restrictedDomains.includes(domain)) {
-      this.emailError = 'Sorry, you cannot RSVP to this event with this email';
-      return;
-    }
+    const validationError = this.validateBusinessEmail(email, true);
+    if (validationError) return;
 
     this.emailError = null;
     this.onVerified.emit(email);
+  }
+
+  prepareNextClick() {
+    this.suppressBlurEmailCheck = true;
+    setTimeout(() => {
+      this.suppressBlurEmailCheck = false;
+    }, 0);
+  }
+
+  checkEmailOnBlur() {
+    if (this.suppressBlurEmailCheck) return;
+
+    const email = this.regForm.get('businessEmail')?.value;
+    if (!email) return;
+
+    const validationError = this.validateBusinessEmail(email, false);
+    if (validationError) return;
+
+    this.onEmailCheck.emit(email);
   }
 
   prevStep() {
@@ -238,7 +299,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.regForm.valid) {
-      this.onSubmitRegistration.emit(this.regForm.value);
+      this.onSubmitRegistration.emit(this.regForm.getRawValue());
     } else {
       this.markFormGroupTouched(this.regForm);
     }
@@ -251,5 +312,22 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
         this.markFormGroupTouched(control as FormGroup);
       }
     });
+  }
+
+  private validateBusinessEmail(email: string, showError: boolean): string | null {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      if (showError) this.emailError = 'Please enter a valid email address';
+      return 'invalid_email';
+    }
+
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (this.restrictedDomains.includes(domain)) {
+      if (showError) this.emailError = 'Sorry, you cannot RSVP to this event with this email';
+      return 'restricted_domain';
+    }
+
+    if (showError) this.emailError = null;
+    return null;
   }
 }

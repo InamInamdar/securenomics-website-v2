@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, viewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, inject, viewChild, ElementRef, Injector, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
@@ -7,7 +7,8 @@ import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { RegistrationFormComponent } from '../../shared/components/registration-form/registration-form';
 import { CourseDetailService } from './course-detail.service';
-import { finalize } from 'rxjs';
+import { finalize, distinctUntilChanged, map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-course-detail',
@@ -22,7 +23,14 @@ export class CourseDetailComponent implements OnInit {
     private router = inject(Router);
     private sanitizer = inject(DomSanitizer);
     private courseDetailService = inject(CourseDetailService);
-
+    private injector = inject(Injector);
+    private courseId = toSignal(
+        this.route.paramMap.pipe(
+            map((params) => params.get('id')),
+            distinctUntilChanged()
+        ),
+        { initialValue: this.route.snapshot.paramMap.get('id') }
+    );
     schedule = signal<any>(null);
     loading = signal(true);
     error = signal<string | null>(null);
@@ -31,6 +39,9 @@ export class CourseDetailComponent implements OnInit {
     registrationStep = signal(1);
     verifiedEmail = '';
     isRegistering = signal(false);
+    isRegisteredUser = signal(false);
+    private lastCheckedEmail = '';
+    private pendingProceedEmail: string | null = null;
     existingUser: any = null;
     userRole: string = '';
     userId: number | null = null;
@@ -38,78 +49,97 @@ export class CourseDetailComponent implements OnInit {
     registrationSection = viewChild<ElementRef>('registrationSection');
 
     ngOnInit(): void {
-        const id = this.route.snapshot.paramMap.get('id') || '';
-        if (!id) {
-            this.error.set('Invalid course ID.');
-            this.loading.set(false);
-            return;
-        }
-        else {
-            this.courseDetailService.getScheduleById(id).pipe(
+        effect((onCleanup) => {
+            const id = this.courseId() || '';
+
+            if (!id) {
+                this.schedule.set(null);
+                this.error.set('Invalid course ID.');
+                this.loading.set(false);
+                return;
+            }
+
+            this.loading.set(true);
+            this.error.set(null);
+
+            const sub = this.courseDetailService.getScheduleById(id).pipe(
                 finalize(() => this.loading.set(false))
             ).subscribe({
                 next: (data) => this.schedule.set(data),
-                error: () => this.error.set('Failed to load course details. Please try again later.')
+                error: () => {
+                    this.schedule.set(null);
+                    this.error.set('Failed to load course details. Please try again later.');
+                }
             });
-        }
+            onCleanup(() => sub.unsubscribe());
+        }, { injector: this.injector });
     }
 
-    handleVerified(email: string) {
-        if (this.isRegistering()) return;
+    handleEmailCheck(email: string, proceedToStep2: boolean = false) {
+        const normalizedEmail = (email || '').trim().toLowerCase();
+        if (!normalizedEmail) return;
+
+        // Reuse the latest result and avoid duplicate API calls.
+        if (this.lastCheckedEmail === normalizedEmail) {
+            if (proceedToStep2) {
+                this.verifiedEmail = normalizedEmail;
+                this.registrationStep.set(2);
+                this.scrollToRegistrationSection();
+            }
+            return;
+        }
+
+        if (this.isRegistering()) {
+            if (proceedToStep2) {
+                this.pendingProceedEmail = normalizedEmail;
+            }
+            return;
+        }
 
         this.isRegistering.set(true);
-        this.courseDetailService.getUserByEmail(email).pipe(
-            finalize(() => this.isRegistering.set(false))
+        this.courseDetailService.getUserByEmail(normalizedEmail).pipe(
+            finalize(() => {
+                this.isRegistering.set(false);
+                this.lastCheckedEmail = normalizedEmail;
+            })
         ).subscribe({
             next: (response) => {
-                const user = response?.user;
-                const role = user?.role;
+                const candidate = response?.user ?? response?.data?.user ?? response?.data ?? response;
+                const user = Array.isArray(candidate) ? candidate[0] : candidate;
+                const isExisting = !!(user && (user.id || user.email || user.role));
 
-                if (role === 'Admin' || role === 'Instructor') {
-                    alert('Email exists as Admin/Instructor. Please use a different email or contact support.');
-                    return;
-                }
+                this.isRegisteredUser.set(isExisting);
+                this.existingUser = isExisting ? user : null;
+                this.userId = isExisting && user?.id ? user.id : null;
+                this.userRole = isExisting && user?.role ? String(user.role) : '';
 
-                if (role === 'Student') {
-                    // Existing Student logic
-                    this.existingUser = user;
-                    this.userId = user.id;
-                    this.userRole = role;
-                    this.verifiedEmail = email;
+                if (proceedToStep2 || this.pendingProceedEmail === normalizedEmail) {
+                    this.verifiedEmail = normalizedEmail;
                     this.registrationStep.set(2);
-                } else {
-                    // New User or other logic
-                    this.existingUser = null;
-                    this.userId = null;
-                    this.userRole = '';
-                    this.verifiedEmail = email;
-                    this.registrationStep.set(2);
+                    this.scrollToRegistrationSection();
+                    this.pendingProceedEmail = null;
                 }
-
-                // Scroll to the registration section after it's rendered
-                setTimeout(() => {
-                    const element = this.registrationSection()?.nativeElement;
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
             },
             error: () => {
-                // If 404 or other error, treat as new user as per typical flow
+                // Email not found or API error path: keep full form flow.
+                this.isRegisteredUser.set(false);
                 this.existingUser = null;
                 this.userId = null;
                 this.userRole = '';
-                this.verifiedEmail = email;
-                this.registrationStep.set(2);
 
-                setTimeout(() => {
-                    const element = this.registrationSection()?.nativeElement;
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
+                if (proceedToStep2 || this.pendingProceedEmail === normalizedEmail) {
+                    this.verifiedEmail = normalizedEmail;
+                    this.registrationStep.set(2);
+                    this.scrollToRegistrationSection();
+                    this.pendingProceedEmail = null;
+                }
             }
         });
+    }
+
+    // Backward compatibility for any stale template/runtime cache still emitting onVerified -> handleVerified.
+    handleVerified(email: string) {
+        this.handleEmailCheck(email, true);
     }
 
     onSubmitRegistration(register: any) {
@@ -189,6 +219,15 @@ export class CourseDetailComponent implements OnInit {
 
     handleBack() {
         this.registrationStep.set(1);
+    }
+
+    private scrollToRegistrationSection() {
+        setTimeout(() => {
+            const element = this.registrationSection()?.nativeElement;
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
     }
 
     get safeDescription(): SafeHtml {

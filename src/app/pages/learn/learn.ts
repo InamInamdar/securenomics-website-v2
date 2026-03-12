@@ -6,7 +6,7 @@ import { SelectModule } from 'primeng/select';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { CourseCardComponent } from '../../shared/components/course-card/course-card';
-import { CourseDetailService } from '../course-detail/course-detail.service';
+import { LearnService } from './learn.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -25,7 +25,7 @@ import { finalize } from 'rxjs';
   styleUrl: './learn.css',
 })
 export class LearnComponent implements AfterViewInit {
-  private courseDetailService = inject(CourseDetailService);
+  private learnService = inject(LearnService);
 
   schedules = signal<any[]>([]);
   totalSchedules = signal(0);
@@ -139,14 +139,15 @@ export class LearnComponent implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       // Fetch only when these filter signals change
       this.activeCategory();
       this.activeRegion();
       this.activeDeliveryModes();
       this.searchQuery();
 
-      this.fetchSchedules();
+      const sub = this.fetchSchedules();
+      onCleanup(() => sub.unsubscribe());
     });
   }
 
@@ -171,7 +172,15 @@ export class LearnComponent implements AfterViewInit {
     }
 
     // Always fetch a large pool to allow client-side windowing/vendor filtering
-    this.courseDetailService.getSchedule(this.activeRegion(), trainingType).pipe(
+    return this.learnService.getSchedules({
+      skip: 0,
+      take: 1000,
+      search: this.searchQuery(),
+      region: this.activeRegion(),
+      training_type: trainingType,
+      order: 'asc',
+      sortby: 'start_date'
+    }).pipe(
       finalize(() => this.loading.set(false))
     ).subscribe({
       next: (res) => {
