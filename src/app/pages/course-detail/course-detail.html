@@ -258,6 +258,53 @@
             </div>
         </section>
 
+        <!-- ── SUCCESS MODAL ── -->
+        @if (showSuccess()) {
+        <div class="modal-overlay" (click)="closeModal()">
+            <div class="modal-container" (click)="$event.stopPropagation()">
+                <button class="modal-close" (click)="closeModal()" aria-label="Close modal">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <!-- Success Content -->
+                <div class="modal-content text-center">
+                    <div class="success-icon-container">
+                        <div class="glow-background"></div>
+                        <div class="success-circle-solid">
+                            <svg class="checkmark-svg" viewBox="0 0 52 52">
+                                <path class="checkmark-check-solid" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h3 class="modal-title">Thank You!</h3>
+                    <p class="modal-message">
+                        Thank you for submitting your registration request.<br>
+                        We will get back to you in one business day.
+                    </p>
+
+                    <!-- Note Box -->
+                    <div class="modal-notice">
+                        <p class="notice-text">
+                            <strong>Note:</strong> Please check your <span class="spam-highlight">SPAM</span> folder in case you don't receive the email in the next 24 hours.
+                        </p>
+                    </div>
+
+                    <!-- CTA -->
+                    <button (click)="onBackToCourseList()" class="modal-cta">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Course List
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+
         }<!-- end main content -->
 
     </main>

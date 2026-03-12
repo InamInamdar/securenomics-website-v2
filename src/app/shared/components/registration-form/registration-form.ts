@@ -1,11 +1,13 @@
-import { Component, Input, OnInit, inject, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, inject, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, HostListener, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Captcha } from "../../../../primeng/captcha";
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Captcha],
   template: `
     <div class="registration-container" [class.bg-white]="step === 1" [class.rounded-3xl]="step === 1" [class.shadow-xl]="step === 1" [class.shadow-blue-500/5]="step === 1" [class.border]="step === 1" [class.border-slate-100]="step === 1" [class.overflow-hidden]="step === 1">
       @if (step === 1) {
@@ -131,14 +133,14 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
               </div>
 
               <!-- Verification -->
-              <div class="p-6 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                  <div class="w-6 h-6 border-2 border-slate-300 rounded flex items-center justify-center bg-white cursor-pointer hover:border-blue-500 transition-colors">
-                  </div>
-                  <span class="text-sm font-medium text-slate-600">I'm not a robot</span>
-                </div>
-                <img src="assets/images/recaptcha.png" alt="reCAPTCHA" class="h-8 opacity-50 grayscale transition-all hover:opacity-100 hover:grayscale-0 cursor-help" onerror="this.style.display='none'">
-              </div>
+              <p-captcha
+                #captchaRef
+                formControlName="captcha"
+                [siteKey]="siteKey"
+                (onResponse)="onCaptchaResolved($event)"
+                (onExpire)="onCaptchaExpired()"
+                (onError)="onCaptchaError()"
+              ></p-captcha>
 
               <!-- Actions -->
               <div class="flex flex-col sm:flex-row gap-4 pt-6">
@@ -153,7 +155,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
                   type="submit" 
                   (click)="onSubmit()" 
                   class="cta-button cta-primary flex-grow py-5 text-sm font-bold shadow-lg shadow-blue-500/20 order-1 sm:order-2"
-                  [disabled]="regForm.invalid || isLoading"
+                  [disabled]="regForm.invalid || !captchaValid || isLoading"
                 >
                   @if (isLoading) {
                     <div class="flex items-center gap-2">
@@ -173,11 +175,15 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
         </div>
       }
     </div>
+
+
   `,
   styleUrl: './registration-form.css'
 })
 export class RegistrationFormComponent implements OnInit, OnChanges {
   private fb = inject(FormBuilder);
+  private router = inject(Router);
+
 
   @Input() courseTitle: string = '';
   @Input() step: number = 1;
@@ -187,18 +193,24 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   @Input() isExistingStudent: boolean = false;
   @Input() isRegisteredUser: boolean = false;
 
+
   @Output() onEmailCheck = new EventEmitter<string>();
   @Output() onVerified = new EventEmitter<string>();
   @Output() onBack = new EventEmitter<void>();
   @Output() onSubmitRegistration = new EventEmitter<any>();
 
+  @ViewChild('captchaRef') captchaRef?: Captcha;
+
+  captchaValid: boolean = false;
+  captchaToken: string | null = null;
   regForm!: FormGroup;
   emailError: string | null = null;
   private suppressBlurEmailCheck = false;
 
+  siteKey = "6Le-9L4hAAAAAHRW2TUJingKvxYktbTMNAGkmJ71";
   restrictedDomains = [
-    'hotmail.com', 'gmail.com', 'yahoo.com', 'outlook.com', 
-    'live.com', 'mail.com', 'cisco.com', 'fortinet.com', 
+    'hotmail.com', 'gmail.com', 'yahoo.com', 'outlook.com',
+    'live.com', 'mail.com', 'cisco.com', 'fortinet.com',
     'juniper.com', 'juniper.net', 'wiz.io', 'island.io'
   ];
 
@@ -211,7 +223,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       phone: ['', Validators.required],
       alternateEmail: [''],
       paymentMethod: ['Purchase Order'],
-      comments: ['']
+      comments: [''],
+      captcha: [null, Validators.required]
     });
     this.updateValidators();
   }
@@ -225,6 +238,14 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
         this.regForm.get('businessEmail')?.disable();
       } else {
         this.regForm.get('businessEmail')?.enable();
+        this.resetCaptchaState();
+      }
+    }
+    if (changes['isLoading'] && this.regForm) {
+      const wasLoading = changes['isLoading'].previousValue;
+      const isLoadingNow = changes['isLoading'].currentValue;
+      if (wasLoading === true && isLoadingNow === false && this.step === 2) {
+        this.resetCaptchaState();
       }
     }
     if (changes['prefillData'] && this.regForm) {
@@ -298,11 +319,26 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    if (this.regForm.valid) {
+    if (this.regForm.valid && this.captchaValid) {
       this.onSubmitRegistration.emit(this.regForm.getRawValue());
     } else {
       this.markFormGroupTouched(this.regForm);
     }
+  }
+
+  onCaptchaResolved(token: string) {
+    this.captchaValid = !!token;
+    this.captchaToken = token || null;
+    this.regForm.get('captcha')?.setValue(this.captchaToken);
+    this.regForm.get('captcha')?.updateValueAndValidity();
+  }
+
+  onCaptchaExpired() {
+    this.resetCaptchaState();
+  }
+
+  onCaptchaError() {
+    this.resetCaptchaState();
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -329,5 +365,13 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
     if (showError) this.emailError = null;
     return null;
+  }
+
+  private resetCaptchaState() {
+    this.captchaRef?.reset();
+    this.captchaValid = false;
+    this.captchaToken = null;
+    this.regForm.get('captcha')?.setValue(null);
+    this.regForm.get('captcha')?.updateValueAndValidity();
   }
 }

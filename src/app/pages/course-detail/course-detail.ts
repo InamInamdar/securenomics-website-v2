@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, inject, viewChild, ElementRef, Injector, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, inject, viewChild, ElementRef, Injector, effect, PLATFORM_ID, HostListener } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -24,6 +24,7 @@ export class CourseDetailComponent implements OnInit {
     private sanitizer = inject(DomSanitizer);
     private courseDetailService = inject(CourseDetailService);
     private injector = inject(Injector);
+    private platformId = inject(PLATFORM_ID);
     private courseId = toSignal(
         this.route.paramMap.pipe(
             map((params) => params.get('id')),
@@ -40,6 +41,7 @@ export class CourseDetailComponent implements OnInit {
     verifiedEmail = '';
     isRegistering = signal(false);
     isRegisteredUser = signal(false);
+    showSuccess = signal(false);
     private lastCheckedEmail = '';
     private pendingProceedEmail: string | null = null;
     existingUser: any = null;
@@ -208,7 +210,8 @@ export class CourseDetailComponent implements OnInit {
             finalize(() => this.isRegistering.set(false))
         ).subscribe({
             next: () => {
-                this.router.navigate(['/confirmation']);
+                this.showSuccess.set(true);
+                this.toggleBodyScroll(true);
             },
             error: (err) => {
                 console.error('Registration error:', err);
@@ -228,6 +231,33 @@ export class CourseDetailComponent implements OnInit {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 100);
+    }
+
+    @HostListener('document:keydown.escape', ['$event'])
+    onEscapeKey(event: any) {
+        if (this.showSuccess()) {
+            this.closeModal();
+        }
+    }
+
+    closeModal() {
+        this.showSuccess.set(false);
+        this.toggleBodyScroll(false);
+    }
+
+    onBackToCourseList() {
+        this.closeModal();
+        this.router.navigate(['/learn']);
+    }
+
+    private toggleBodyScroll(disable: boolean) {
+        if (isPlatformBrowser(this.platformId)) {
+            if (disable) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
     }
 
     get safeDescription(): SafeHtml {
