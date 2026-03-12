@@ -6,7 +6,6 @@ import { SelectModule } from 'primeng/select';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 import { CourseCardComponent } from '../../shared/components/course-card/course-card';
-import { Course } from './learn.data';
 import { LearnService } from './learn.service';
 import { finalize } from 'rxjs';
 
@@ -140,14 +139,15 @@ export class LearnComponent implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       // Fetch only when these filter signals change
       this.activeCategory();
       this.activeRegion();
       this.activeDeliveryModes();
       this.searchQuery();
 
-      this.fetchSchedules();
+      const sub = this.fetchSchedules();
+      onCleanup(() => sub.unsubscribe());
     });
   }
 
@@ -172,7 +172,7 @@ export class LearnComponent implements AfterViewInit {
     }
 
     // Always fetch a large pool to allow client-side windowing/vendor filtering
-    this.learnService.getSchedules({
+    return this.learnService.getSchedules({
       skip: 0,
       take: 1000,
       search: this.searchQuery(),
@@ -188,7 +188,7 @@ export class LearnComponent implements AfterViewInit {
 
         if (vendor) {
           // Client-side filter for vendors specifically
-          data = data.filter(item =>
+          data = data.filter((item: any) =>
             item.course?.category?.organization?.name === vendor
           );
         }
