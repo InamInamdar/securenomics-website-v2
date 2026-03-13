@@ -232,7 +232,7 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-100">
-              <button type="submit" class="cta-button cta-primary px-12 py-4">Submit Request</button>
+              <button type="submit" class="cta-button cta-primary px-12 py-4" [disabled]="povForm.invalid">Submit Request</button>
               <button type="button" routerLink="/services"
                 class="cta-button bg-slate-100 text-slate-600 hover:bg-slate-200 px-12 py-4 rounded-xl font-bold transition-all">Cancel</button>
             </div>

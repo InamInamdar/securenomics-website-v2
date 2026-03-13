@@ -24,5 +24,9 @@ export const routes: Routes = [
   {
     path: 'pov-request',
     loadComponent: () => import('./pages/pov-request/pov-request').then((m) => m.PovRequestComponent)
+  },
+  {
+    path: 'demo-request',
+    loadComponent: () => import('./pages/demo-request/demo-request').then((m) => m.DemoRequestComponent)
   }
 ];

@@ -1,0 +1,160 @@
+<app-header></app-header>
+
+<main class="bg-white">
+  <!-- Page Intro Section -->
+  <section class="relative overflow-hidden pt-32 lg:pt-48 pb-16 bg-cyber-dark">
+    <!-- Animated Background Gradients -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-0 -left-1/4 w-1/2 h-full bg-brand-blue/10 blur-[120px] rounded-full animate-pulse"></div>
+      <div
+        class="absolute bottom-0 -right-1/4 w-1/2 h-full bg-brand-blue-dark/20 blur-[120px] rounded-full animate-pulse"
+        style="animation-delay: 2s"></div>
+    </div>
+
+    <div class="max-container relative z-20">
+      <div class="text-center max-w-4xl mx-auto" appAnimateOnScroll="animate__fadeInUp">
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight mb-6">
+          Request a 60-minute <span class="text-gradient">Netskope Demo</span> with Securenomics
+        </h1>
+        <p class="text-xl text-slate-400 leading-relaxed">
+          Please complete and submit this form to request a 60-minute Netskope Demo with Securenomics.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form Section -->
+  <section class="section-padding bg-slate-50/50">
+    <div class="max-container">
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-[40px] shadow-2xl shadow-blue-500/5 p-8 lg:p-16 border border-slate-100"
+          appAnimateOnScroll="animate__fadeInUp">
+          <div class="mb-12 border-b border-slate-100 pb-8">
+            <h2 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-wide">NETSKOPE Demo Request Form :
+            </h2>
+          </div>
+
+          <form [formGroup]="demoForm" (ngSubmit)="onSubmit()" class="space-y-12">
+            <!-- Contact Details Grid -->
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="form-group">
+                <label class="form-label" for="firstName">First Name *</label>
+                <input type="text" id="firstName" formControlName="firstName" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('firstName')?.invalid && demoForm.get('firstName')?.touched}"
+                  placeholder="Please Add First Name">
+                @if (demoForm.get('firstName')?.invalid && demoForm.get('firstName')?.touched) {
+                <span class="error-message">First Name is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="lastName">Last Name *</label>
+                <input type="text" id="lastName" formControlName="lastName" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('lastName')?.invalid && demoForm.get('lastName')?.touched}"
+                  placeholder="Please Add Last Name">
+                @if (demoForm.get('lastName')?.invalid && demoForm.get('lastName')?.touched) {
+                <span class="error-message">Last Name is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="company">Company *</label>
+                <input type="text" id="company" formControlName="company" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('company')?.invalid && demoForm.get('company')?.touched}"
+                  placeholder="Please Add Company Name">
+                @if (demoForm.get('company')?.invalid && demoForm.get('company')?.touched) {
+                <span class="error-message">Company Name is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="jobTitle">Job Title *</label>
+                <input type="text" id="jobTitle" formControlName="jobTitle" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('jobTitle')?.invalid && demoForm.get('jobTitle')?.touched}"
+                  placeholder="Please Add Job Title">
+                @if (demoForm.get('jobTitle')?.invalid && demoForm.get('jobTitle')?.touched) {
+                <span class="error-message">Job Title is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="businessEmail">Business Email *</label>
+                <input type="email" id="businessEmail" formControlName="businessEmail" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('businessEmail')?.invalid && demoForm.get('businessEmail')?.touched}"
+                  placeholder="Please Add Business Email">
+                @if (demoForm.get('businessEmail')?.invalid && demoForm.get('businessEmail')?.touched) {
+                <span class="error-message">Valid Business Email is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="employeeCount">Number of employees *</label>
+                <select id="employeeCount" formControlName="employeeCount" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('employeeCount')?.invalid && demoForm.get('employeeCount')?.touched}">
+                  <option value="" disabled selected>Select Number Of Employees</option>
+                  <option value="1-50">1-50</option>
+                  <option value="51-200">51-200</option>
+                  <option value="201-500">201-500</option>
+                  <option value="501-1000">501-1000</option>
+                  <option value="1000+">1000+</option>
+                </select>
+                @if (demoForm.get('employeeCount')?.invalid && demoForm.get('employeeCount')?.touched) {
+                <span class="error-message">Number of employees is required</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="country">Country *</label>
+                <input type="text" id="country" formControlName="country" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('country')?.invalid && demoForm.get('country')?.touched}"
+                  placeholder="Please Add Country">
+                @if (demoForm.get('country')?.invalid && demoForm.get('country')?.touched) {
+                <span class="error-message">Country is required</span>
+                }
+              </div>
+            </div>
+
+            <!-- Topics of Interest -->
+            <div class="pt-8 border-t border-slate-100">
+              <h3 class="text-sm font-bold text-slate-800 mb-6">Topics of interest *</h3>
+
+              <div class="grid md:grid-cols-2 gap-4" formArrayName="topicsArray">
+                @for (topic of topics; track topic.id; let i = $index) {
+                <label
+                  class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 hover:border-blue-500/30 hover:bg-blue-50/30 transition-all cursor-pointer group">
+                  <input type="checkbox" [formControlName]="i"
+                    class="w-5 h-5 mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                  <span
+                    class="text-sm text-slate-700 font-medium group-hover:text-slate-900 leading-tight">{{topic.label}}</span>
+                </label>
+                }
+              </div>
+
+              <!-- Conditional Other Input -->
+              @if (isOtherSelected) {
+              <div class="mt-6 form-group animate-fade-in-up">
+                <label class="form-label" for="otherTopicDescription">Please specify *</label>
+                <input type="text" id="otherTopicDescription" formControlName="otherTopicDescription" class="form-input"
+                  [ngClass]="{'is-invalid': demoForm.get('otherTopicDescription')?.invalid && demoForm.get('otherTopicDescription')?.touched}"
+                  placeholder="Specify your topic of interest">
+                @if (demoForm.get('otherTopicDescription')?.invalid && demoForm.get('otherTopicDescription')?.touched) {
+                <span class="error-message">Specification is required when "Other" is selected</span>
+                }
+              </div>
+              }
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end gap-4 pt-8 border-t border-slate-100 mt-12">
+              <button type="submit" class="cta-button cta-primary px-10 py-3" [disabled]="demoForm.invalid">Submit</button>
+              <button type="button" routerLink="/"
+                class="cta-button bg-transparent border-2 border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 px-10 py-3">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

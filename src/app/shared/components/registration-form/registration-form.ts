@@ -23,7 +23,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
                 type="email" 
                 formControlName="businessEmail" 
                 class="form-input" 
-                [class.border-red-500]="emailError"
+                [class.border-red-500]="emailError || (regForm.get('businessEmail')?.touched && regForm.get('businessEmail')?.invalid)"
                 placeholder="e.g. name@company.com"
                 (input)="emailError = null"
                 (blur)="checkEmailOnBlur()"
@@ -31,7 +31,11 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
               <p class="text-[11px] text-slate-400 mt-2 leading-relaxed italic">
                 Note: Must be a business email address. Email accounts from domains like gmail, hotmail, yahoo etc. will not be accepted.
               </p>
-              @if (emailError) {
+              @if (regForm.get('businessEmail')?.touched && regForm.get('businessEmail')?.hasError('required')) {
+                <p class="text-xs text-red-500 mt-1 font-semibold">Business email is required</p>
+              } @else if (regForm.get('businessEmail')?.touched && regForm.get('businessEmail')?.hasError('email')) {
+                <p class="text-xs text-red-500 mt-1 font-semibold">Please enter a valid email address</p>
+              } @else if (emailError) {
                 <p class="text-xs text-red-500 mt-1 font-semibold">{{ emailError }}</p>
               }
             </div>
@@ -101,7 +105,22 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
                 </div>
                 <div class="form-group">
                   <label class="form-label text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Phone Number *</label>
-                  <input type="tel" formControlName="phone" class="form-input" placeholder="Direct workspace phone">
+                  <input
+                    type="tel"
+                    formControlName="phone"
+                    class="form-input"
+                    [class.border-red-500]="regForm.get('phone')?.touched && regForm.get('phone')?.invalid"
+                    placeholder="Direct workspace phone"
+                    inputmode="numeric"
+                    minlength="10"
+                    maxlength="15"
+                    pattern="[0-9]*"
+                  >
+                  @if (regForm.get('phone')?.touched && regForm.get('phone')?.hasError('required')) {
+                    <p class="text-xs text-red-500 mt-1 font-semibold">Phone number is required</p>
+                  } @else if (regForm.get('phone')?.touched && regForm.get('phone')?.hasError('pattern')) {
+                    <p class="text-xs text-red-500 mt-1 font-semibold">Phone number must be 10 to 15 digits</p>
+                  }
                 </div>
               </div>
 
@@ -208,7 +227,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       name: ['', Validators.required],
       company: ['', Validators.required],
       title: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10,15}$/)]],
       alternateEmail: [''],
       paymentMethod: ['Purchase Order'],
       comments: ['']
@@ -257,7 +276,10 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       });
     } else {
       fields.forEach(f => {
-        this.regForm.get(f)?.setValidators(Validators.required);
+        const validators = f === 'phone'
+          ? [Validators.required, Validators.pattern(/^\d{10,15}$/)]
+          : [Validators.required];
+        this.regForm.get(f)?.setValidators(validators);
         this.regForm.get(f)?.updateValueAndValidity();
       });
     }
@@ -315,7 +337,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   }
 
   private validateBusinessEmail(email: string, showError: boolean): string | null {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       if (showError) this.emailError = 'Please enter a valid email address';
       return 'invalid_email';
