@@ -57,13 +57,13 @@ export class DemoRequestComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.demoForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      company: ['', Validators.required],
-      jobTitle: ['', Validators.required],
+      firstName: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      lastName: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      company: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      jobTitle: ['', [Validators.required, this.requiredTrimmedValidator()]],
       businessEmail: ['', [Validators.required, Validators.email]],
       employeeCount: ['', Validators.required],
-      country: ['', Validators.required],
+      country: ['', [Validators.required, this.requiredTrimmedValidator()]],
       topicsArray: this.fb.array(
         this.topics.map(() => new FormControl(false)),
         [this.atLeastOneTopicSelectedValidator()]
@@ -79,7 +79,7 @@ export class DemoRequestComponent implements OnInit, OnDestroy {
       this.otherCheckboxSub = otherControl.valueChanges.subscribe((isChecked: boolean) => {
         const otherDescControl = this.demoForm.get('otherTopicDescription');
         if (isChecked) {
-          otherDescControl?.setValidators([Validators.required]);
+          otherDescControl?.setValidators([Validators.required, this.requiredTrimmedValidator()]);
         } else {
           otherDescControl?.clearValidators();
           otherDescControl?.setValue('');
@@ -150,15 +150,23 @@ export class DemoRequestComponent implements OnInit, OnDestroy {
     };
   }
 
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched();
-      if ((control as any).controls) {
-        this.markFormGroupTouched(control as FormGroup);
+  private markFormGroupTouched(control: AbstractControl) {
+    control.markAsTouched();
+
+    if (control instanceof FormGroup || control instanceof FormArray) {
+      Object.values(control.controls).forEach(childControl => {
+        this.markFormGroupTouched(childControl);
+      });
+    }
+  }
+
+  private requiredTrimmedValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (typeof value === 'string' && value.trim().length === 0) {
+        return { required: true };
       }
-      if (control instanceof FormArray) {
-        control.controls.forEach(c => this.markFormGroupTouched(c as FormGroup));
-      }
-    });
+      return null;
+    };
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Header } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
@@ -90,10 +90,10 @@ export class PovRequestComponent {
 
   constructor(private fb: FormBuilder) {
     this.povForm = this.fb.group({
-      name: ['', Validators.required],
-      company: ['', Validators.required],
-      phone: ['', Validators.required],
-      jobTitle: ['', Validators.required],
+      name: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      company: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      phone: ['', [Validators.required, this.requiredTrimmedValidator()]],
+      jobTitle: ['', [Validators.required, this.requiredTrimmedValidator()]],
       businessEmail: ['', [Validators.required, Validators.email]],
       employeeCount: ['', Validators.required],
       projectCompletionDate: ['', Validators.required],
@@ -118,5 +118,15 @@ export class PovRequestComponent {
         this.markFormGroupTouched(control as FormGroup);
       }
     });
+  }
+
+  private requiredTrimmedValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (typeof value === 'string' && value.trim().length === 0) {
+        return { required: true };
+      }
+      return null;
+    };
   }
 }
