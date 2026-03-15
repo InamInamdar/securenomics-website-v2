@@ -39,7 +39,7 @@ export class LearnComponent implements AfterViewInit {
   skip = signal(0);
   take = signal(9);
 
-  categories = ['All', 'Workshops', 'Cato Networks', 'Netskope', 'Cisco', 'Cyberhaven'];
+  categories = ['All', 'Netskope', 'Workshops', 'Cato Networks', 'Cisco', 'Cyberhaven'];
   activeCategory = signal('All');
   underlineStyle = signal({ left: '0px', width: '0px' });
 
